@@ -1,0 +1,1019 @@
+[
+  {
+    "table": "appointments",
+    "rows": 4,
+    "columns": [
+      {
+        "name": "appointment_id",
+        "type": "integer"
+      },
+      {
+        "name": "doctor_id",
+        "type": "integer"
+      },
+      {
+        "name": "appointment_date",
+        "type": "date"
+      },
+      {
+        "name": "location",
+        "type": "character varying"
+      }
+    ]
+  },
+  {
+    "table": "country",
+    "rows": 15,
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "name",
+        "type": "character varying"
+      }
+    ]
+  },
+  {
+    "table": "customer_details",
+    "rows": 3,
+    "columns": [
+      {
+        "name": "customer_id",
+        "type": "integer"
+      }
+    ]
+  },
+  {
+    "table": "doctors",
+    "rows": 4,
+    "columns": [
+      {
+        "name": "doctor_id",
+        "type": "integer"
+      },
+      {
+        "name": "name",
+        "type": "character varying"
+      },
+      {
+        "name": "age",
+        "type": "integer"
+      },
+      {
+        "name": "gender",
+        "type": "character varying"
+      },
+      {
+        "name": "department",
+        "type": "character varying"
+      }
+    ]
+  },
+  {
+    "table": "league",
+    "rows": 11,
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "country_id",
+        "type": "bigint"
+      },
+      {
+        "name": "name",
+        "type": "character varying"
+      }
+    ]
+  },
+  {
+    "table": "match",
+    "rows": 25979,
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "country_id",
+        "type": "bigint"
+      },
+      {
+        "name": "league_id",
+        "type": "bigint"
+      },
+      {
+        "name": "season",
+        "type": "character varying"
+      },
+      {
+        "name": "stage",
+        "type": "bigint"
+      },
+      {
+        "name": "date",
+        "type": "character varying"
+      },
+      {
+        "name": "match_api_id",
+        "type": "bigint"
+      },
+      {
+        "name": "home_team_api_id",
+        "type": "bigint"
+      },
+      {
+        "name": "away_team_api_id",
+        "type": "bigint"
+      },
+      {
+        "name": "home_team_goal",
+        "type": "bigint"
+      },
+      {
+        "name": "away_team_goal",
+        "type": "bigint"
+      },
+      {
+        "name": "home_player_x1",
+        "type": "bigint"
+      },
+      {
+        "name": "home_player_x2",
+        "type": "bigint"
+      },
+      {
+        "name": "home_player_x3",
+        "type": "bigint"
+      },
+      {
+        "name": "home_player_x4",
+        "type": "bigint"
+      },
+      {
+        "name": "home_player_x5",
+        "type": "bigint"
+      },
+      {
+        "name": "home_player_x6",
+        "type": "bigint"
+      },
+      {
+        "name": "home_player_x7",
+        "type": "bigint"
+      },
+      {
+        "name": "home_player_x8",
+        "type": "bigint"
+      },
+      {
+        "name": "home_player_x9",
+        "type": "bigint"
+      },
+      {
+        "name": "home_player_x10",
+        "type": "bigint"
+      },
+      {
+        "name": "home_player_x11",
+        "type": "bigint"
+      },
+      {
+        "name": "away_player_x1",
+        "type": "bigint"
+      },
+      {
+        "name": "away_player_x2",
+        "type": "bigint"
+      },
+      {
+        "name": "away_player_x3",
+        "type": "bigint"
+      },
+      {
+        "name": "away_player_x4",
+        "type": "bigint"
+      },
+      {
+        "name": "away_player_x5",
+        "type": "bigint"
+      },
+      {
+        "name": "away_player_x6",
+        "type": "bigint"
+      },
+      {
+        "name": "away_player_x7",
+        "type": "bigint"
+      },
+      {
+        "name": "away_player_x8",
+        "type": "bigint"
+      },
+      {
+        "name": "away_player_x9",
+        "type": "bigint"
+      },
+      {
+        "name": "away_player_x10",
+        "type": "bigint"
+      },
+      {
+        "name": "away_player_x11",
+        "type": "bigint"
+      },
+      {
+        "name": "home_player_y1",
+        "type": "bigint"
+      },
+      {
+        "name": "home_player_y2",
+        "type": "bigint"
+      },
+      {
+        "name": "home_player_y3",
+        "type": "bigint"
+      },
+      {
+        "name": "home_player_y4",
+        "type": "bigint"
+      },
+      {
+        "name": "home_player_y5",
+        "type": "bigint"
+      },
+      {
+        "name": "home_player_y6",
+        "type": "bigint"
+      },
+      {
+        "name": "home_player_y7",
+        "type": "bigint"
+      },
+      {
+        "name": "home_player_y8",
+        "type": "bigint"
+      },
+      {
+        "name": "home_player_y9",
+        "type": "bigint"
+      },
+      {
+        "name": "home_player_y10",
+        "type": "bigint"
+      },
+      {
+        "name": "home_player_y11",
+        "type": "bigint"
+      },
+      {
+        "name": "away_player_y1",
+        "type": "bigint"
+      },
+      {
+        "name": "away_player_y2",
+        "type": "bigint"
+      },
+      {
+        "name": "away_player_y3",
+        "type": "bigint"
+      },
+      {
+        "name": "away_player_y4",
+        "type": "bigint"
+      },
+      {
+        "name": "away_player_y5",
+        "type": "bigint"
+      },
+      {
+        "name": "away_player_y6",
+        "type": "bigint"
+      },
+      {
+        "name": "away_player_y7",
+        "type": "bigint"
+      },
+      {
+        "name": "away_player_y8",
+        "type": "bigint"
+      },
+      {
+        "name": "away_player_y9",
+        "type": "bigint"
+      },
+      {
+        "name": "away_player_y10",
+        "type": "bigint"
+      },
+      {
+        "name": "away_player_y11",
+        "type": "bigint"
+      },
+      {
+        "name": "home_player_1",
+        "type": "bigint"
+      },
+      {
+        "name": "home_player_2",
+        "type": "bigint"
+      },
+      {
+        "name": "home_player_3",
+        "type": "bigint"
+      },
+      {
+        "name": "home_player_4",
+        "type": "bigint"
+      },
+      {
+        "name": "home_player_5",
+        "type": "bigint"
+      },
+      {
+        "name": "home_player_6",
+        "type": "bigint"
+      },
+      {
+        "name": "home_player_7",
+        "type": "bigint"
+      },
+      {
+        "name": "home_player_8",
+        "type": "bigint"
+      },
+      {
+        "name": "home_player_9",
+        "type": "bigint"
+      },
+      {
+        "name": "home_player_10",
+        "type": "bigint"
+      },
+      {
+        "name": "home_player_11",
+        "type": "bigint"
+      },
+      {
+        "name": "away_player_1",
+        "type": "bigint"
+      },
+      {
+        "name": "away_player_2",
+        "type": "bigint"
+      },
+      {
+        "name": "away_player_3",
+        "type": "bigint"
+      },
+      {
+        "name": "away_player_4",
+        "type": "bigint"
+      },
+      {
+        "name": "away_player_5",
+        "type": "bigint"
+      },
+      {
+        "name": "away_player_6",
+        "type": "bigint"
+      },
+      {
+        "name": "away_player_7",
+        "type": "bigint"
+      },
+      {
+        "name": "away_player_8",
+        "type": "bigint"
+      },
+      {
+        "name": "away_player_9",
+        "type": "bigint"
+      },
+      {
+        "name": "away_player_10",
+        "type": "bigint"
+      },
+      {
+        "name": "away_player_11",
+        "type": "bigint"
+      },
+      {
+        "name": "goal",
+        "type": "character varying"
+      },
+      {
+        "name": "shoton",
+        "type": "character varying"
+      },
+      {
+        "name": "shotoff",
+        "type": "character varying"
+      },
+      {
+        "name": "foulcommit",
+        "type": "character varying"
+      },
+      {
+        "name": "card",
+        "type": "character varying"
+      },
+      {
+        "name": "cross",
+        "type": "character varying"
+      },
+      {
+        "name": "corner",
+        "type": "character varying"
+      },
+      {
+        "name": "possession",
+        "type": "character varying"
+      },
+      {
+        "name": "b365h",
+        "type": "real"
+      },
+      {
+        "name": "b365d",
+        "type": "real"
+      },
+      {
+        "name": "b365a",
+        "type": "real"
+      },
+      {
+        "name": "bwh",
+        "type": "real"
+      },
+      {
+        "name": "bwd",
+        "type": "real"
+      },
+      {
+        "name": "bwa",
+        "type": "real"
+      },
+      {
+        "name": "iwh",
+        "type": "real"
+      },
+      {
+        "name": "iwd",
+        "type": "real"
+      },
+      {
+        "name": "iwa",
+        "type": "real"
+      },
+      {
+        "name": "lbh",
+        "type": "real"
+      },
+      {
+        "name": "lbd",
+        "type": "real"
+      },
+      {
+        "name": "lba",
+        "type": "real"
+      },
+      {
+        "name": "psh",
+        "type": "real"
+      },
+      {
+        "name": "psd",
+        "type": "real"
+      },
+      {
+        "name": "psa",
+        "type": "real"
+      },
+      {
+        "name": "whh",
+        "type": "real"
+      },
+      {
+        "name": "whd",
+        "type": "real"
+      },
+      {
+        "name": "wha",
+        "type": "real"
+      },
+      {
+        "name": "sjh",
+        "type": "real"
+      },
+      {
+        "name": "sjd",
+        "type": "real"
+      },
+      {
+        "name": "sja",
+        "type": "real"
+      },
+      {
+        "name": "vch",
+        "type": "real"
+      },
+      {
+        "name": "vcd",
+        "type": "real"
+      },
+      {
+        "name": "vca",
+        "type": "real"
+      },
+      {
+        "name": "gbh",
+        "type": "real"
+      },
+      {
+        "name": "gbd",
+        "type": "real"
+      },
+      {
+        "name": "gba",
+        "type": "real"
+      },
+      {
+        "name": "bsh",
+        "type": "real"
+      },
+      {
+        "name": "bsd",
+        "type": "real"
+      },
+      {
+        "name": "bsa",
+        "type": "real"
+      }
+    ]
+  },
+  {
+    "table": "player",
+    "rows": 11060,
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "player_api_id",
+        "type": "bigint"
+      },
+      {
+        "name": "player_name",
+        "type": "character varying"
+      },
+      {
+        "name": "player_fifa_api_id",
+        "type": "bigint"
+      },
+      {
+        "name": "birthday",
+        "type": "character varying"
+      },
+      {
+        "name": "height",
+        "type": "bigint"
+      },
+      {
+        "name": "weight",
+        "type": "bigint"
+      },{
+        "name": "player_movements",
+        "type": "character varying"
+      }
+    ]
+  },
+  {
+    "table": "player_attributes",
+    "rows": 183978,
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "player_fifa_api_id",
+        "type": "bigint"
+      },
+      {
+        "name": "player_api_id",
+        "type": "bigint"
+      },
+      {
+        "name": "date",
+        "type": "character varying"
+      },
+      {
+        "name": "overall_rating",
+        "type": "bigint"
+      },
+      {
+        "name": "potential",
+        "type": "bigint"
+      },
+      {
+        "name": "preferred_foot",
+        "type": "character varying"
+      },
+      {
+        "name": "attacking_work_rate",
+        "type": "character varying"
+      },
+      {
+        "name": "defensive_work_rate",
+        "type": "character varying"
+      },
+      {
+        "name": "crossing",
+        "type": "bigint"
+      },
+      {
+        "name": "finishing",
+        "type": "bigint"
+      },
+      {
+        "name": "heading_accuracy",
+        "type": "bigint"
+      },
+      {
+        "name": "short_passing",
+        "type": "bigint"
+      },
+      {
+        "name": "volleys",
+        "type": "bigint"
+      },
+      {
+        "name": "dribbling",
+        "type": "bigint"
+      },
+      {
+        "name": "curve",
+        "type": "bigint"
+      },
+      {
+        "name": "free_kick_accuracy",
+        "type": "bigint"
+      },
+      {
+        "name": "long_passing",
+        "type": "bigint"
+      },
+      {
+        "name": "ball_control",
+        "type": "bigint"
+      },
+      {
+        "name": "acceleration",
+        "type": "bigint"
+      },
+      {
+        "name": "sprint_speed",
+        "type": "bigint"
+      },
+      {
+        "name": "agility",
+        "type": "bigint"
+      },
+      {
+        "name": "reactions",
+        "type": "bigint"
+      },
+      {
+        "name": "balance",
+        "type": "bigint"
+      },
+      {
+        "name": "shot_power",
+        "type": "bigint"
+      },
+      {
+        "name": "jumping",
+        "type": "bigint"
+      },
+      {
+        "name": "stamina",
+        "type": "bigint"
+      },
+      {
+        "name": "strength",
+        "type": "bigint"
+      },
+      {
+        "name": "long_shots",
+        "type": "bigint"
+      },
+      {
+        "name": "aggression",
+        "type": "bigint"
+      },
+      {
+        "name": "interceptions",
+        "type": "bigint"
+      },
+      {
+        "name": "positioning",
+        "type": "bigint"
+      },
+      {
+        "name": "vision",
+        "type": "bigint"
+      },
+      {
+        "name": "penalties",
+        "type": "bigint"
+      },
+      {
+        "name": "marking",
+        "type": "bigint"
+      },
+      {
+        "name": "standing_tackle",
+        "type": "bigint"
+      },
+      {
+        "name": "sliding_tackle",
+        "type": "bigint"
+      },
+      {
+        "name": "gk_diving",
+        "type": "bigint"
+      },
+      {
+        "name": "gk_handling",
+        "type": "bigint"
+      },
+      {
+        "name": "gk_kicking",
+        "type": "bigint"
+      },
+      {
+        "name": "gk_positioning",
+        "type": "bigint"
+      },
+      {
+        "name": "gk_reflexes",
+        "type": "bigint"
+      }
+    ]
+  },
+  {
+    "table": "player_rate",
+    "rows": 3,
+    "columns": [
+      {
+        "name": "id",
+        "type": "numeric"
+      },
+      {
+        "name": "date",
+        "type": "date"
+      },
+      {
+        "name": "overall_rating",
+        "type": "numeric"
+      },
+      {
+        "name": "record_uuid",
+        "type": "uuid"
+      },
+      {
+        "name": "created_timestamp",
+        "type": "timestamp with time zone"
+      },
+      {
+        "name": "last_modified_timestamp",
+        "type": "timestamp with time zone"
+      },
+      {
+        "name": "data_source",
+        "type": "character varying"
+      },
+      {
+        "name": "rating_confidence",
+        "type": "numeric"
+      },
+      {
+        "name": "is_peak_rating",
+        "type": "boolean"
+      },
+      {
+        "name": "potential_rating",
+        "type": "integer"
+      },
+      {
+        "name": "rating_change_points",
+        "type": "integer"
+      },
+      {
+        "name": "comments",
+        "type": "character varying"
+      },
+      {
+        "name": "processing_status",
+        "type": "character varying"
+      },
+      {
+        "name": "version_number",
+        "type": "integer"
+      },
+      {
+        "name": "external_reference_id",
+        "type": "character varying"
+      },
+      {
+        "name": "is_archived",
+        "type": "boolean"
+      }
+    ]
+  },
+  {
+    "table": "player_stats_temp",
+    "rows": 5,
+    "columns": [
+      {
+        "name": "player_id",
+        "type": "integer"
+      },
+      {
+        "name": "match_id",
+        "type": "integer"
+      },
+      {
+        "name": "goals",
+        "type": "integer"
+      },
+      {
+        "name": "assists",
+        "type": "integer"
+      },
+      {
+        "name": "yellow_cards",
+        "type": "integer"
+      },
+      {
+        "name": "red_cards",
+        "type": "integer"
+      },
+      {
+        "name": "minutes_played",
+        "type": "integer"
+      }
+    ]
+  },
+  {
+    "table": "team",
+    "rows": 299,
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "team_api_id",
+        "type": "bigint"
+      },
+      {
+        "name": "team_fifa_api_id",
+        "type": "bigint"
+      },
+      {
+        "name": "team_long_name",
+        "type": "character varying"
+      },
+      {
+        "name": "team_short_name",
+        "type": "character varying"
+      }
+    ]
+  },
+  {
+    "table": "team_attributes",
+    "rows": 1458,
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "team_fifa_api_id",
+        "type": "bigint"
+      },
+      {
+        "name": "team_api_id",
+        "type": "bigint"
+      },
+      {
+        "name": "date",
+        "type": "character varying"
+      },
+      {
+        "name": "buildupplayspeed",
+        "type": "bigint"
+      },
+      {
+        "name": "buildupplayspeedclass",
+        "type": "character varying"
+      },
+      {
+        "name": "buildupplaydribbling",
+        "type": "bigint"
+      },
+      {
+        "name": "buildupplaydribblingclass",
+        "type": "character varying"
+      },
+      {
+        "name": "buildupplaypassing",
+        "type": "bigint"
+      },
+      {
+        "name": "buildupplaypassingclass",
+        "type": "character varying"
+      },
+      {
+        "name": "buildupplaypositioningclass",
+        "type": "character varying"
+      },
+      {
+        "name": "chancecreationpassing",
+        "type": "bigint"
+      },
+      {
+        "name": "chancecreationpassingclass",
+        "type": "character varying"
+      },
+      {
+        "name": "chancecreationcrossing",
+        "type": "bigint"
+      },
+      {
+        "name": "chancecreationcrossingclass",
+        "type": "character varying"
+      },
+      {
+        "name": "chancecreationshooting",
+        "type": "bigint"
+      },
+      {
+        "name": "chancecreationshootingclass",
+        "type": "character varying"
+      },
+      {
+        "name": "chancecreationpositioningclass",
+        "type": "character varying"
+      },
+      {
+        "name": "defencepressure",
+        "type": "bigint"
+      },
+      {
+        "name": "defencepressureclass",
+        "type": "character varying"
+      },
+      {
+        "name": "defenceaggression",
+        "type": "bigint"
+      },
+      {
+        "name": "defenceaggressionclass",
+        "type": "character varying"
+      },
+      {
+        "name": "defenceteamwidth",
+        "type": "bigint"
+      },
+      {
+        "name": "defenceteamwidthclass",
+        "type": "character varying"
+      },
+      {
+        "name": "defencedefenderlineclass",
+        "type": "character varying"
+      }
+    ]
+  },
+  {
+    "table": "tmpteam",
+    "rows": 6,
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "date",
+        "type": "character varying"
+      }
+    ]
+  }
+]

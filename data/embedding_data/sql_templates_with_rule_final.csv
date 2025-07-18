@@ -1,0 +1,8 @@
+sql_template,rule_applied
+"SELECT t1.col1 FROM t1 WHERE (t1.col1 IN ('value', 'value') GROUP BY t1.col1 ORDER BY t1.col1",JOIN_REDUCE_EXPRESSIONS
+"SELECT * FROM t1 WHERE t1.col1 IN ('value', 'value')",PROJECT_REDUCE_EXPRESSIONS
+"SELECT col1, COUNT(*) AS order_count FROM t1 WHERE EXISTS(SELECT * FROM t2 WHERE col3 = col4) GROUP BY col1 ORDER BY col1",PROJECT_TO_CALC
+"SELECT col1, col2, col3 FROM t1, t2 WHERE col5 = col6 AND col4 NOT IN (SELECT col7 FROM t3 WHERE col8 LIKE 'value') GROUP BY col1, col2, col3",FILTER_REDUCE_EXPRESSIONS
+"select col1, col2 from t1, t2 where t1.col4 = t2.col4 and t2.col5 not in ( select col6 from t3) group by col1, col2",FILTER_REDUCE_EXPRESSIONS
+"SELECT col1, col2, col3 FROM t1, t2 WHERE col5 = col6 AND col3 IN (X, X, X, X, X, X, X, X) AND NOT col4 IN (SELECT col7 FROM t3 ) GROUP BY col1, col2, col3",PROJECT_REDUCE_EXPRESSIONS
+"SELECT col1, col2, col3, COUNT(DISTINCT col4) AS supplier_cnt FROM t1, t2 WHERE col5 = col6 AND col1 <> 'value' AND NOT col2 LIKE 'value' AND col3 IN (X, X, X, X, X, X, X, X) AND NOT col4 IN (SELECT col7 FROM t3 WHERE col8 LIKE 'value') GROUP BY col1, col2, col3",FILTER_REDUCE_EXPRESSIONS

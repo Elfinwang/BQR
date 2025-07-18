@@ -1,0 +1,540 @@
+[
+  {
+    "table": "appointments",
+    "rows": 4,
+    "columns": [
+      {
+        "name": "appointment_id",
+        "type": "integer"
+      },
+      {
+        "name": "doctor_id",
+        "type": "integer"
+      },
+      {
+        "name": "appointment_date",
+        "type": "date"
+      },
+      {
+        "name": "location",
+        "type": "character varying"
+      }
+    ]
+  },
+  {
+    "table": "clinical_status",
+    "rows": 3985,
+    "columns": [
+      {
+        "name": "clinical_status_id",
+        "type": "integer"
+      },
+      {
+        "name": "patient_id",
+        "type": "integer"
+      },
+      {
+        "name": "other_dx",
+        "type": "character varying"
+      },
+      {
+        "name": "history_of_neoadjuvant_treatment",
+        "type": "boolean"
+      },
+      {
+        "name": "person_neoplasm_cancer_status",
+        "type": "character varying"
+      },
+      {
+        "name": "vital_status",
+        "type": "character varying"
+      },
+      {
+        "name": "days_to_last_followup",
+        "type": "integer"
+      },
+      {
+        "name": "days_to_death",
+        "type": "integer"
+      },
+      {
+        "name": "has_new_tumor_events_information",
+        "type": "boolean"
+      }
+    ]
+  },
+  {
+    "table": "demographics",
+    "rows": 3985,
+    "columns": [
+      {
+        "name": "demographics_id",
+        "type": "integer"
+      },
+      {
+        "name": "patient_id",
+        "type": "integer"
+      },
+      {
+        "name": "days_to_birth",
+        "type": "integer"
+      },
+      {
+        "name": "gender",
+        "type": "character varying"
+      },
+      {
+        "name": "race_list",
+        "type": "character varying"
+      },
+      {
+        "name": "ethnicity",
+        "type": "character varying"
+      },
+      {
+        "name": "country_of_birth",
+        "type": "character varying"
+      },
+      {
+        "name": "height",
+        "type": "numeric"
+      },
+      {
+        "name": "weight",
+        "type": "numeric"
+      }
+    ]
+  },
+  {
+    "table": "doctors",
+    "rows": 4,
+    "columns": [
+      {
+        "name": "doctor_id",
+        "type": "integer"
+      },
+      {
+        "name": "name",
+        "type": "character varying"
+      },
+      {
+        "name": "age",
+        "type": "integer"
+      },
+      {
+        "name": "gender",
+        "type": "character varying"
+      },
+      {
+        "name": "department",
+        "type": "character varying"
+      }
+    ]
+  },
+  {
+    "table": "icd_classifications",
+    "rows": 16,
+    "columns": [
+      {
+        "name": "classification_id",
+        "type": "integer"
+      },
+      {
+        "name": "icd_10",
+        "type": "character varying"
+      },
+      {
+        "name": "icd_o_3_site",
+        "type": "character varying"
+      },
+      {
+        "name": "icd_o_3_histology",
+        "type": "character varying"
+      }
+    ]
+  },
+  {
+    "table": "lifestyle_and_risk_factors",
+    "rows": 3985,
+    "columns": [
+      {
+        "name": "lifestyle_id",
+        "type": "integer"
+      },
+      {
+        "name": "patient_id",
+        "type": "integer"
+      },
+      {
+        "name": "tobacco_smoking_history",
+        "type": "character varying"
+      },
+      {
+        "name": "age_began_smoking_in_years",
+        "type": "integer"
+      },
+      {
+        "name": "stopped_smoking_year",
+        "type": "integer"
+      },
+      {
+        "name": "number_pack_years_smoked",
+        "type": "numeric"
+      },
+      {
+        "name": "alcohol_history_documented",
+        "type": "boolean"
+      },
+      {
+        "name": "frequency_of_alcohol_consumption",
+        "type": "character varying"
+      },
+      {
+        "name": "amount_of_alcohol_consumption_per_day",
+        "type": "character varying"
+      },
+      {
+        "name": "reflux_history",
+        "type": "boolean"
+      },
+      {
+        "name": "antireflux_treatment_types",
+        "type": "character varying"
+      },
+      {
+        "name": "h_pylori_infection",
+        "type": "boolean"
+      },
+      {
+        "name": "barretts_esophagus",
+        "type": "boolean"
+      },
+      {
+        "name": "goblet_cells_present",
+        "type": "boolean"
+      },
+      {
+        "name": "history_of_esophageal_cancer",
+        "type": "boolean"
+      },
+      {
+        "name": "number_of_relatives_diagnosed",
+        "type": "integer"
+      }
+    ]
+  },
+  {
+    "table": "pathology_and_surgery",
+    "rows": 3985,
+    "columns": [
+      {
+        "name": "pathology_id",
+        "type": "integer"
+      },
+      {
+        "name": "patient_id",
+        "type": "integer"
+      },
+      {
+        "name": "primary_pathology_tumor_tissue_site",
+        "type": "character varying"
+      },
+      {
+        "name": "primary_pathology_esophageal_tumor_cental_location",
+        "type": "character varying"
+      },
+      {
+        "name": "primary_pathology_esophageal_tumor_involvement_sites",
+        "type": "character varying"
+      },
+      {
+        "name": "primary_pathology_histological_type",
+        "type": "character varying"
+      },
+      {
+        "name": "primary_pathology_columnar_metaplasia_present",
+        "type": "boolean"
+      },
+      {
+        "name": "primary_pathology_columnar_mucosa_goblet_cell_present",
+        "type": "boolean"
+      },
+      {
+        "name": "primary_pathology_columnar_mucosa_dysplasia",
+        "type": "boolean"
+      },
+      {
+        "name": "primary_pathology_neoplasm_histologic_grade",
+        "type": "character varying"
+      },
+      {
+        "name": "primary_pathology_days_to_initial_pathologic_diagnosis",
+        "type": "integer"
+      },
+      {
+        "name": "primary_pathology_age_at_initial_pathologic_diagnosis",
+        "type": "integer"
+      },
+      {
+        "name": "primary_pathology_year_of_initial_pathologic_diagnosis",
+        "type": "integer"
+      },
+      {
+        "name": "primary_pathology_initial_pathologic_diagnosis_method",
+        "type": "character varying"
+      },
+      {
+        "name": "primary_pathology_init_pathology_dx_method_other",
+        "type": "character varying"
+      },
+      {
+        "name": "primary_pathology_lymph_node_metastasis_radiographic_evidence",
+        "type": "boolean"
+      },
+      {
+        "name": "primary_pathology_primary_lymph_node_presentation_assessment",
+        "type": "character varying"
+      },
+      {
+        "name": "primary_pathology_lymph_node_examined_count",
+        "type": "integer"
+      },
+      {
+        "name": "primary_pathology_number_of_lymphnodes_positive_by_he",
+        "type": "integer"
+      },
+      {
+        "name": "primary_pathology_number_of_lymphnodes_positive_by_ihc",
+        "type": "integer"
+      },
+      {
+        "name": "primary_pathology_planned_surgery_status",
+        "type": "character varying"
+      },
+      {
+        "name": "primary_pathology_treatment_prior_to_surgery",
+        "type": "character varying"
+      },
+      {
+        "name": "primary_pathology_residual_tumor",
+        "type": "character varying"
+      }
+    ]
+  },
+  {
+    "table": "patient_addresses",
+    "rows": 3987,
+    "columns": [
+      {
+        "name": "address_id",
+        "type": "integer"
+      },
+      {
+        "name": "patient_id",
+        "type": "integer"
+      },
+      {
+        "name": "address_type",
+        "type": "character varying"
+      },
+      {
+        "name": "country_of_procurement",
+        "type": "character varying"
+      },
+      {
+        "name": "state_province_of_procurement",
+        "type": "character varying"
+      },
+      {
+        "name": "city_of_procurement",
+        "type": "character varying"
+      },
+      {
+        "name": "tissue_prospective_collection_indicator",
+        "type": "boolean"
+      },
+      {
+        "name": "tissue_retrospective_collection_indicator",
+        "type": "boolean"
+      }
+    ]
+  },
+  {
+    "table": "patient_icd_codes",
+    "rows": 3985,
+    "columns": [
+      {
+        "name": "patient_icd_id",
+        "type": "integer"
+      },
+      {
+        "name": "patient_id",
+        "type": "integer"
+      },
+      {
+        "name": "classification_id",
+        "type": "integer"
+      },
+      {
+        "name": "initial_diagnosis_by",
+        "type": "character varying"
+      }
+    ]
+  },
+  {
+    "table": "patient_staging",
+    "rows": 3985,
+    "columns": [
+      {
+        "name": "patient_staging_id",
+        "type": "integer"
+      },
+      {
+        "name": "patient_id",
+        "type": "integer"
+      },
+      {
+        "name": "staging_system_id",
+        "type": "integer"
+      },
+      {
+        "name": "stage_event_clinical_stage",
+        "type": "character varying"
+      },
+      {
+        "name": "stage_event_pathologic_stage",
+        "type": "character varying"
+      },
+      {
+        "name": "stage_event_tnm_categories",
+        "type": "character varying"
+      },
+      {
+        "name": "stage_event_psa",
+        "type": "character varying"
+      },
+      {
+        "name": "stage_event_gleason_grading",
+        "type": "character varying"
+      },
+      {
+        "name": "stage_event_ann_arbor",
+        "type": "character varying"
+      },
+      {
+        "name": "stage_event_serum_markers",
+        "type": "character varying"
+      },
+      {
+        "name": "stage_event_igcccg_stage",
+        "type": "character varying"
+      },
+      {
+        "name": "stage_event_masaoka_stage",
+        "type": "character varying"
+      }
+    ]
+  },
+  {
+    "table": "patients",
+    "rows": 3985,
+    "columns": [
+      {
+        "name": "patient_id",
+        "type": "integer"
+      },
+      {
+        "name": "patient_barcode",
+        "type": "character varying"
+      },
+      {
+        "name": "bcr_patient_uuid",
+        "type": "uuid"
+      },
+      {
+        "name": "tissue_source_site",
+        "type": "character varying"
+      },
+      {
+        "name": "informed_consent_verified",
+        "type": "boolean"
+      }
+    ]
+  },
+  {
+    "table": "staging_systems",
+    "rows": 3985,
+    "columns": [
+      {
+        "name": "staging_system_id",
+        "type": "integer"
+      },
+      {
+        "name": "stage_event_system_version",
+        "type": "character varying"
+      }
+    ]
+  },
+  {
+    "table": "treatment_and_followup",
+    "rows": 3985,
+    "columns": [
+      {
+        "name": "treatment_followup_id",
+        "type": "integer"
+      },
+      {
+        "name": "patient_id",
+        "type": "integer"
+      },
+      {
+        "name": "followup_no",
+        "type": "integer"
+      },
+      {
+        "name": "primary_pathology_karnofsky_performance_score",
+        "type": "integer"
+      },
+      {
+        "name": "primary_pathology_eastern_cancer_oncology_group",
+        "type": "integer"
+      },
+      {
+        "name": "primary_pathology_radiation_therapy",
+        "type": "boolean"
+      },
+      {
+        "name": "primary_pathology_postoperative_rx_tx",
+        "type": "character varying"
+      },
+      {
+        "name": "has_follow_ups_information",
+        "type": "boolean"
+      },
+      {
+        "name": "has_drugs_information",
+        "type": "boolean"
+      },
+      {
+        "name": "has_radiations_information",
+        "type": "boolean"
+      },
+      {
+        "name": "project",
+        "type": "character varying"
+      },
+      {
+        "name": "day_of_form_completion",
+        "type": "integer"
+      },
+      {
+        "name": "month_of_form_completion",
+        "type": "integer"
+      },
+      {
+        "name": "year_of_form_completion",
+        "type": "integer"
+      }
+    ]
+  }
+]

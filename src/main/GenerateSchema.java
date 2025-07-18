@@ -49,7 +49,7 @@ public class GenerateSchema {
                             type = "boolean";
                         } 
                          else {
-                            System.out.println("类型转换失败，临时转成varchar, 字段为:" + subJson.get("name").toString() + "，类型为:" + type);
+                            // System.out.println("类型转换失败，临时转成varchar, 字段为:" + subJson.get("name").toString() + "，类型为:" + type);
                             type = "varchar";
                         }
                     }

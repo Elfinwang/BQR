@@ -1,0 +1,454 @@
+[
+  {
+    "table": "account",
+    "rows": 0,
+    "columns": [
+      {
+        "name": "account_id",
+        "type": "integer"
+      },
+      {
+        "name": "district_id",
+        "type": "integer"
+      },
+      {
+        "name": "frequency",
+        "type": "character varying"
+      },
+      {
+        "name": "date",
+        "type": "date"
+      }
+    ]
+  },
+  {
+    "table": "account_activity",
+    "rows": 2,
+    "columns": [
+      {
+        "name": "start_date",
+        "type": "date"
+      },
+      {
+        "name": "end_date",
+        "type": "date"
+      }
+    ]
+  },
+  {
+    "table": "blackout_periods",
+    "rows": 4,
+    "columns": [
+      {
+        "name": "start_date",
+        "type": "date"
+      },
+      {
+        "name": "end_date",
+        "type": "date"
+      }
+    ]
+  },
+  {
+    "table": "client",
+    "rows": 5369,
+    "columns": [
+      {
+        "name": "client_id",
+        "type": "bigint"
+      },
+      {
+        "name": "gender",
+        "type": "character varying"
+      },
+      {
+        "name": "birth_date",
+        "type": "date"
+      },
+      {
+        "name": "district_id",
+        "type": "bigint"
+      }
+    ]
+  },
+  {
+    "table": "disp",
+    "rows": 0,
+    "columns": [
+      {
+        "name": "disp_id",
+        "type": "integer"
+      },
+      {
+        "name": "client_id",
+        "type": "integer"
+      },
+      {
+        "name": "account_id",
+        "type": "integer"
+      },
+      {
+        "name": "type",
+        "type": "character varying"
+      }
+    ]
+  },
+  {
+    "table": "district",
+    "rows": 77,
+    "columns": [
+      {
+        "name": "district_id",
+        "type": "bigint"
+      },
+      {
+        "name": "a2",
+        "type": "character varying"
+      },
+      {
+        "name": "a3",
+        "type": "character varying"
+      },
+      {
+        "name": "a4",
+        "type": "character varying"
+      },
+      {
+        "name": "a5",
+        "type": "character varying"
+      },
+      {
+        "name": "a6",
+        "type": "character varying"
+      },
+      {
+        "name": "a7",
+        "type": "character varying"
+      },
+      {
+        "name": "a8",
+        "type": "bigint"
+      },
+      {
+        "name": "a9",
+        "type": "bigint"
+      },
+      {
+        "name": "a10",
+        "type": "real"
+      },
+      {
+        "name": "a11",
+        "type": "bigint"
+      },
+      {
+        "name": "a12",
+        "type": "real"
+      },
+      {
+        "name": "a13",
+        "type": "real"
+      },
+      {
+        "name": "a14",
+        "type": "bigint"
+      },
+      {
+        "name": "a15",
+        "type": "bigint"
+      },
+      {
+        "name": "a16",
+        "type": "bigint"
+      }
+    ]
+  },
+  {
+    "table": "loan",
+    "rows": 7,
+    "columns": [
+      {
+        "name": "loan_id",
+        "type": "integer"
+      },
+      {
+        "name": "account_id",
+        "type": "integer"
+      },
+      {
+        "name": "payments",
+        "type": "real"
+      },
+      {
+        "name": "loan_amount",
+        "type": "numeric"
+      },
+      {
+        "name": "loan_term_months",
+        "type": "integer"
+      },
+      {
+        "name": "interest_rate",
+        "type": "numeric"
+      },
+      {
+        "name": "loan_status",
+        "type": "character varying"
+      },
+      {
+        "name": "application_date",
+        "type": "date"
+      },
+      {
+        "name": "approval_timestamp",
+        "type": "timestamp with time zone"
+      },
+      {
+        "name": "last_updated",
+        "type": "timestamp with time zone"
+      },
+      {
+        "name": "notes",
+        "type": "character varying"
+      },
+      {
+        "name": "is_secured",
+        "type": "boolean"
+      },
+      {
+        "name": "metadata_json",
+        "type": "jsonb"
+      },
+      {
+        "name": "internal_ref_id",
+        "type": "uuid"
+      },
+      {
+        "name": "currency_code",
+        "type": "character varying"
+      },
+      {
+        "name": "disbursement_date",
+        "type": "date"
+      },
+      {
+        "name": "version",
+        "type": "integer"
+      }
+    ]
+  },
+  {
+    "table": "order",
+    "rows": 6471,
+    "columns": [
+      {
+        "name": "order_id",
+        "type": "bigint"
+      },
+      {
+        "name": "account_id",
+        "type": "bigint"
+      },
+      {
+        "name": "bank_to",
+        "type": "character varying"
+      },
+      {
+        "name": "account_to",
+        "type": "bigint"
+      },
+      {
+        "name": "amount",
+        "type": "real"
+      },
+      {
+        "name": "k_symbol",
+        "type": "character varying"
+      }
+    ]
+  },
+  {
+    "table": "player_rate",
+    "rows": 3,
+    "columns": [
+      {
+        "name": "id",
+        "type": "numeric"
+      },
+      {
+        "name": "date",
+        "type": "date"
+      },
+      {
+        "name": "overall_rating",
+        "type": "numeric"
+      },
+      {
+        "name": "record_uuid",
+        "type": "uuid"
+      },
+      {
+        "name": "created_timestamp",
+        "type": "timestamp with time zone"
+      },
+      {
+        "name": "last_modified_timestamp",
+        "type": "timestamp with time zone"
+      },
+      {
+        "name": "data_source",
+        "type": "character varying"
+      },
+      {
+        "name": "rating_confidence",
+        "type": "numeric"
+      },
+      {
+        "name": "is_peak_rating",
+        "type": "boolean"
+      },
+      {
+        "name": "potential_rating",
+        "type": "integer"
+      },
+      {
+        "name": "rating_change_points",
+        "type": "integer"
+      },
+      {
+        "name": "comments",
+        "type": "character varying"
+      },
+      {
+        "name": "processing_status",
+        "type": "character varying"
+      },
+      {
+        "name": "version_number",
+        "type": "integer"
+      },
+      {
+        "name": "external_reference_id",
+        "type": "character varying"
+      },
+      {
+        "name": "is_archived",
+        "type": "boolean"
+      }
+    ]
+  },
+  {
+    "table": "player_stats",
+    "rows": 0,
+    "columns": [
+      {
+        "name": "player_id",
+        "type": "integer"
+      },
+      {
+        "name": "match_id",
+        "type": "integer"
+      },
+      {
+        "name": "goals",
+        "type": "integer"
+      },
+      {
+        "name": "assists",
+        "type": "integer"
+      },
+      {
+        "name": "yellow_cards",
+        "type": "integer"
+      },
+      {
+        "name": "red_cards",
+        "type": "integer"
+      },
+      {
+        "name": "minutes_played",
+        "type": "integer"
+      }
+    ]
+  },
+  {
+    "table": "player_stats_temp",
+    "rows": 5,
+    "columns": [
+      {
+        "name": "player_id",
+        "type": "integer"
+      },
+      {
+        "name": "match_id",
+        "type": "integer"
+      },
+      {
+        "name": "goals",
+        "type": "integer"
+      },
+      {
+        "name": "assists",
+        "type": "integer"
+      },
+      {
+        "name": "yellow_cards",
+        "type": "integer"
+      },
+      {
+        "name": "red_cards",
+        "type": "integer"
+      },
+      {
+        "name": "minutes_played",
+        "type": "integer"
+      }
+    ]
+  },
+  {
+    "table": "trans",
+    "rows": 1056320,
+    "columns": [
+      {
+        "name": "trans_id",
+        "type": "bigint"
+      },
+      {
+        "name": "account_id",
+        "type": "bigint"
+      },
+      {
+        "name": "date",
+        "type": "date"
+      },
+      {
+        "name": "type",
+        "type": "character varying"
+      },
+      {
+        "name": "operation",
+        "type": "character varying"
+      },
+      {
+        "name": "amount",
+        "type": "bigint"
+      },
+      {
+        "name": "balance",
+        "type": "bigint"
+      },
+      {
+        "name": "k_symbol",
+        "type": "character varying"
+      },
+      {
+        "name": "bank",
+        "type": "character varying"
+      },
+      {
+        "name": "account",
+        "type": "bigint"
+      }
+    ]
+  }
+]

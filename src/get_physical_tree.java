@@ -42,7 +42,7 @@ public class get_physical_tree {
         String db_id = (String) inputList.get(0);
         String testSql = (String) inputList.get(1);
         testSql = testSql.replace(";", "");
-        JSONArray schemaJson = Utils.readJsonFile(newpath+"/data/data_llmr2/schemas/" + db_id + ".json");
+        JSONArray schemaJson = Utils.readJsonFile(newpath+"/data/schemas/" + db_id + ".json");
         Rewriter rewriter = new Rewriter(schemaJson);
         RelNode testRelNode = rewriter.SQL2RA(testSql);
         final RelWriter relWriter = new RelWriterImpl(new PrintWriter(System.out), SqlExplainLevel.ALL_ATTRIBUTES, false);

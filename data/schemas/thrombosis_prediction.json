@@ -1,0 +1,342 @@
+[
+  {
+    "table": "attendance_trunc",
+    "rows": 5,
+    "columns": [
+      {
+        "name": "link_to_event",
+        "type": "character varying"
+      },
+      {
+        "name": "link_to_member",
+        "type": "character varying"
+      }
+    ]
+  },
+  {
+    "table": "examination",
+    "rows": 106,
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "Examination Date",
+        "type": "date"
+      },
+      {
+        "name": "aCL IgG",
+        "type": "real"
+      },
+      {
+        "name": "aCL IgM",
+        "type": "real"
+      },
+      {
+        "name": "ana",
+        "type": "bigint"
+      },
+      {
+        "name": "ANA Pattern",
+        "type": "character varying"
+      },
+      {
+        "name": "aCL IgA",
+        "type": "bigint"
+      },
+      {
+        "name": "diagnosis",
+        "type": "character varying"
+      },
+      {
+        "name": "kct",
+        "type": "character varying"
+      },
+      {
+        "name": "rvvt",
+        "type": "character varying"
+      },
+      {
+        "name": "lac",
+        "type": "character varying"
+      },
+      {
+        "name": "symptoms",
+        "type": "character varying"
+      },
+      {
+        "name": "thrombosis",
+        "type": "bigint"
+      }
+    ]
+  },
+  {
+    "table": "laboratory",
+    "rows": 13908,
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "date",
+        "type": "date"
+      },
+      {
+        "name": "got",
+        "type": "bigint"
+      },
+      {
+        "name": "gpt",
+        "type": "bigint"
+      },
+      {
+        "name": "ldh",
+        "type": "bigint"
+      },
+      {
+        "name": "alp",
+        "type": "bigint"
+      },
+      {
+        "name": "tp",
+        "type": "real"
+      },
+      {
+        "name": "alb",
+        "type": "real"
+      },
+      {
+        "name": "ua",
+        "type": "real"
+      },
+      {
+        "name": "un",
+        "type": "bigint"
+      },
+      {
+        "name": "cre",
+        "type": "real"
+      },
+      {
+        "name": "T-BIL",
+        "type": "real"
+      },
+      {
+        "name": "T-CHO",
+        "type": "bigint"
+      },
+      {
+        "name": "tg",
+        "type": "bigint"
+      },
+      {
+        "name": "cpk",
+        "type": "bigint"
+      },
+      {
+        "name": "glu",
+        "type": "bigint"
+      },
+      {
+        "name": "wbc",
+        "type": "real"
+      },
+      {
+        "name": "rbc",
+        "type": "real"
+      },
+      {
+        "name": "hgb",
+        "type": "real"
+      },
+      {
+        "name": "hct",
+        "type": "real"
+      },
+      {
+        "name": "plt",
+        "type": "bigint"
+      },
+      {
+        "name": "pt",
+        "type": "real"
+      },
+      {
+        "name": "aptt",
+        "type": "bigint"
+      },
+      {
+        "name": "fg",
+        "type": "real"
+      },
+      {
+        "name": "pic",
+        "type": "bigint"
+      },
+      {
+        "name": "tat",
+        "type": "bigint"
+      },
+      {
+        "name": "tat2",
+        "type": "bigint"
+      },
+      {
+        "name": "U-PRO",
+        "type": "character varying"
+      },
+      {
+        "name": "igg",
+        "type": "bigint"
+      },
+      {
+        "name": "iga",
+        "type": "bigint"
+      },
+      {
+        "name": "igm",
+        "type": "bigint"
+      },
+      {
+        "name": "crp",
+        "type": "character varying"
+      },
+      {
+        "name": "ra",
+        "type": "character varying"
+      },
+      {
+        "name": "rf",
+        "type": "character varying"
+      },
+      {
+        "name": "c3",
+        "type": "bigint"
+      },
+      {
+        "name": "c4",
+        "type": "bigint"
+      },
+      {
+        "name": "rnp",
+        "type": "character varying"
+      },
+      {
+        "name": "sm",
+        "type": "character varying"
+      },
+      {
+        "name": "sc170",
+        "type": "character varying"
+      },
+      {
+        "name": "ssa",
+        "type": "character varying"
+      },
+      {
+        "name": "ssb",
+        "type": "character varying"
+      },
+      {
+        "name": "centromea",
+        "type": "character varying"
+      },
+      {
+        "name": "dna",
+        "type": "character varying"
+      },
+      {
+        "name": "DNA-II",
+        "type": "bigint"
+      }
+    ]
+  },
+  {
+    "table": "member_trunc",
+    "rows": 15,
+    "columns": [
+      {
+        "name": "member_id",
+        "type": "character varying"
+      },
+      {
+        "name": "member_name",
+        "type": "character varying"
+      }
+    ]
+  },
+  {
+    "table": "patient",
+    "rows": 1238,
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "sex",
+        "type": "character varying"
+      },
+      {
+        "name": "birthday",
+        "type": "date"
+      },
+      {
+        "name": "description",
+        "type": "date"
+      },
+      {
+        "name": "First Date",
+        "type": "date"
+      },
+      {
+        "name": "admission",
+        "type": "character varying"
+      },
+      {
+        "name": "diagnosis",
+        "type": "character varying"
+      }
+    ]
+  },
+  {
+    "table": "superhero_group",
+    "rows": 9,
+    "columns": [
+      {
+        "name": "id",
+        "type": "integer"
+      },
+      {
+        "name": "subgroup1",
+        "type": "integer"
+      },
+      {
+        "name": "subgroup2",
+        "type": "integer"
+      }
+    ]
+  },
+  {
+    "table": "tmp",
+    "rows": 2,
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      }
+    ]
+  },
+  {
+    "table": "tmppatient",
+    "rows": 2,
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      }
+    ]
+  }
+]

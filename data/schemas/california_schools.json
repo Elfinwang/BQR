@@ -1,0 +1,442 @@
+[
+  {
+    "table": "frpm",
+    "rows": 9986,
+    "columns": [
+      {
+        "name": "CDSCode",
+        "type": "character varying"
+      },
+      {
+        "name": "Academic Year",
+        "type": "character varying"
+      },
+      {
+        "name": "County Code",
+        "type": "character varying"
+      },
+      {
+        "name": "District Code",
+        "type": "bigint"
+      },
+      {
+        "name": "School Code",
+        "type": "character varying"
+      },
+      {
+        "name": "County Name",
+        "type": "character varying"
+      },
+      {
+        "name": "District Name",
+        "type": "character varying"
+      },
+      {
+        "name": "School Name",
+        "type": "character varying"
+      },
+      {
+        "name": "District Type",
+        "type": "character varying"
+      },
+      {
+        "name": "School Type",
+        "type": "character varying"
+      },
+      {
+        "name": "Educational Option Type",
+        "type": "character varying"
+      },
+      {
+        "name": "NSLP Provision Status",
+        "type": "character varying"
+      },
+      {
+        "name": "Charter School (Y/N)",
+        "type": "bigint"
+      },
+      {
+        "name": "Charter School Number",
+        "type": "character varying"
+      },
+      {
+        "name": "Charter Funding Type",
+        "type": "character varying"
+      },
+      {
+        "name": "IRC",
+        "type": "bigint"
+      },
+      {
+        "name": "Low Grade",
+        "type": "character varying"
+      },
+      {
+        "name": "High Grade",
+        "type": "character varying"
+      },
+      {
+        "name": "Enrollment (K-12)",
+        "type": "real"
+      },
+      {
+        "name": "Free Meal Count (K-12)",
+        "type": "real"
+      },
+      {
+        "name": "Percent (%) Eligible Free (K-12)",
+        "type": "real"
+      },
+      {
+        "name": "FRPM Count (K-12)",
+        "type": "real"
+      },
+      {
+        "name": "Percent (%) Eligible FRPM (K-12)",
+        "type": "real"
+      },
+      {
+        "name": "Enrollment (Ages 5-17)",
+        "type": "real"
+      },
+      {
+        "name": "Free Meal Count (Ages 5-17)",
+        "type": "real"
+      },
+      {
+        "name": "Percent (%) Eligible Free (Ages 5-17)",
+        "type": "real"
+      },
+      {
+        "name": "FRPM Count (Ages 5-17)",
+        "type": "real"
+      },
+      {
+        "name": "Percent (%) Eligible FRPM (Ages 5-17)",
+        "type": "real"
+      },
+      {
+        "name": "2013-14 CALPADS Fall 1 Certification Status",
+        "type": "bigint"
+      }
+    ]
+  },
+  {
+    "table": "frpm_record",
+    "rows": 56,
+    "columns": [
+      {
+        "name": "element",
+        "type": "character varying"
+      },
+      {
+        "name": "record",
+        "type": "double precision"
+      },
+      {
+        "name": "record_id",
+        "type": "uuid"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp with time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp with time zone"
+      },
+      {
+        "name": "source_system",
+        "type": "character varying"
+      },
+      {
+        "name": "is_verified",
+        "type": "boolean"
+      },
+      {
+        "name": "verification_date",
+        "type": "date"
+      },
+      {
+        "name": "notes",
+        "type": "character varying"
+      },
+      {
+        "name": "record_version",
+        "type": "integer"
+      },
+      {
+        "name": "processing_status",
+        "type": "character varying"
+      },
+      {
+        "name": "metadata",
+        "type": "jsonb"
+      },
+      {
+        "name": "batch_id",
+        "type": "bigint"
+      },
+      {
+        "name": "last_processed_by",
+        "type": "character varying"
+      },
+      {
+        "name": "data_quality_score",
+        "type": "numeric"
+      }
+    ]
+  },
+  {
+    "table": "satscores",
+    "rows": 2269,
+    "columns": [
+      {
+        "name": "cds",
+        "type": "character varying"
+      },
+      {
+        "name": "rtype",
+        "type": "character varying"
+      },
+      {
+        "name": "sname",
+        "type": "character varying"
+      },
+      {
+        "name": "dname",
+        "type": "character varying"
+      },
+      {
+        "name": "cname",
+        "type": "character varying"
+      },
+      {
+        "name": "enroll12",
+        "type": "bigint"
+      },
+      {
+        "name": "numtsttakr",
+        "type": "bigint"
+      },
+      {
+        "name": "avgscrread",
+        "type": "bigint"
+      },
+      {
+        "name": "avgscrmath",
+        "type": "bigint"
+      },
+      {
+        "name": "avgscrwrite",
+        "type": "bigint"
+      },
+      {
+        "name": "numge1500",
+        "type": "bigint"
+      }
+    ]
+  },
+  {
+    "table": "schools",
+    "rows": 17686,
+    "columns": [
+      {
+        "name": "cdscode",
+        "type": "character varying"
+      },
+      {
+        "name": "ncesdist",
+        "type": "character varying"
+      },
+      {
+        "name": "ncesschool",
+        "type": "character varying"
+      },
+      {
+        "name": "statustype",
+        "type": "character varying"
+      },
+      {
+        "name": "county",
+        "type": "character varying"
+      },
+      {
+        "name": "district",
+        "type": "character varying"
+      },
+      {
+        "name": "school",
+        "type": "character varying"
+      },
+      {
+        "name": "street",
+        "type": "character varying"
+      },
+      {
+        "name": "streetabr",
+        "type": "character varying"
+      },
+      {
+        "name": "city",
+        "type": "character varying"
+      },
+      {
+        "name": "zip",
+        "type": "character varying"
+      },
+      {
+        "name": "state",
+        "type": "character varying"
+      },
+      {
+        "name": "mailstreet",
+        "type": "character varying"
+      },
+      {
+        "name": "mailstrabr",
+        "type": "character varying"
+      },
+      {
+        "name": "mailcity",
+        "type": "character varying"
+      },
+      {
+        "name": "mailzip",
+        "type": "character varying"
+      },
+      {
+        "name": "mailstate",
+        "type": "character varying"
+      },
+      {
+        "name": "phone",
+        "type": "character varying"
+      },
+      {
+        "name": "ext",
+        "type": "character varying"
+      },
+      {
+        "name": "website",
+        "type": "character varying"
+      },
+      {
+        "name": "opendate",
+        "type": "date"
+      },
+      {
+        "name": "closeddate",
+        "type": "date"
+      },
+      {
+        "name": "charter",
+        "type": "bigint"
+      },
+      {
+        "name": "charternum",
+        "type": "character varying"
+      },
+      {
+        "name": "fundingtype",
+        "type": "character varying"
+      },
+      {
+        "name": "doc",
+        "type": "character varying"
+      },
+      {
+        "name": "doctype",
+        "type": "character varying"
+      },
+      {
+        "name": "soc",
+        "type": "character varying"
+      },
+      {
+        "name": "soctype",
+        "type": "character varying"
+      },
+      {
+        "name": "edopscode",
+        "type": "character varying"
+      },
+      {
+        "name": "edopsname",
+        "type": "character varying"
+      },
+      {
+        "name": "eilcode",
+        "type": "character varying"
+      },
+      {
+        "name": "eilname",
+        "type": "character varying"
+      },
+      {
+        "name": "gsoffered",
+        "type": "character varying"
+      },
+      {
+        "name": "gsserved",
+        "type": "character varying"
+      },
+      {
+        "name": "virtual",
+        "type": "character varying"
+      },
+      {
+        "name": "magnet",
+        "type": "bigint"
+      },
+      {
+        "name": "latitude",
+        "type": "real"
+      },
+      {
+        "name": "longitude",
+        "type": "real"
+      },
+      {
+        "name": "admfname1",
+        "type": "character varying"
+      },
+      {
+        "name": "admlname1",
+        "type": "character varying"
+      },
+      {
+        "name": "admemail1",
+        "type": "character varying"
+      },
+      {
+        "name": "admfname2",
+        "type": "character varying"
+      },
+      {
+        "name": "admlname2",
+        "type": "character varying"
+      },
+      {
+        "name": "admemail2",
+        "type": "character varying"
+      },
+      {
+        "name": "admfname3",
+        "type": "character varying"
+      },
+      {
+        "name": "admlname3",
+        "type": "character varying"
+      },
+      {
+        "name": "admemail3",
+        "type": "character varying"
+      },
+      {
+        "name": "lastupdate",
+        "type": "date"
+      }
+    ]
+  }
+]

@@ -1,0 +1,111 @@
+[
+    {
+        "table": "yearmonth",
+        "rows": null,
+        "columns": [
+            { "name": "customerid", "type": "bigint" },
+            { "name": "date", "type": "character varying" },
+            { "name": "consumption", "type": "real" }
+        ]
+    },
+    {
+        "table": "worker1",
+        "rows": null,
+        "columns": [
+            { "name": "id", "type": "integer" },
+            { "name": "worker_name", "type": "character varying" },
+            { "name": "hire_date", "type": "date" },
+            { "name": "is_active", "type": "boolean" },
+            { "name": "last_login", "type": "timestamp with time zone" },
+            { "name": "performance_score", "type": "numeric(5,2)" },
+            { "name": "department", "type": "character varying" },
+            { "name": "job_title", "type": "character varying" },
+            { "name": "contact_number", "type": "character varying" },
+            { "name": "metadata", "type": "jsonb" },
+            { "name": "version", "type": "integer" }
+        ]
+    },
+    {
+        "table": "worker2",
+        "rows": null,
+        "columns": [
+            { "name": "id", "type": "integer" },
+            { "name": "employee_code", "type": "character varying" },
+            { "name": "start_date", "type": "date" },
+            { "name": "is_contractor", "type": "boolean" },
+            { "name": "last_sync", "type": "timestamp with time zone" },
+            { "name": "hourly_rate", "type": "numeric(8,2)" },
+            { "name": "assigned_project", "type": "character varying" },
+            { "name": "office_location", "type": "character varying" },
+            { "name": "access_level", "type": "smallint" },
+            { "name": "config", "type": "jsonb" },
+            { "name": "notes", "type": "character varying" }
+        ]
+    },
+    {
+        "table": "transactions_1k",
+        "rows": null,
+        "columns": [
+            { "name": "transactionid", "type": "bigint" },
+            { "name": "date", "type": "date" },
+            { "name": "time", "type": "character varying" },
+            { "name": "customerid", "type": "bigint" },
+            { "name": "cardid", "type": "bigint" },
+            { "name": "gasstationid", "type": "bigint" },
+            { "name": "productid", "type": "bigint" },
+            { "name": "amount", "type": "bigint" },
+            { "name": "price", "type": "real" }
+        ]
+    },
+    {
+        "table": "products",
+        "rows": null,
+        "columns": [
+            { "name": "productid", "type": "bigint" },
+            { "name": "description", "type": "character varying" }
+        ]
+    },
+    {
+        "table": "gasstations",
+        "rows": null,
+        "columns": [
+            { "name": "gasstationid", "type": "bigint" },
+            { "name": "chainid", "type": "bigint" },
+            { "name": "country", "type": "character varying" },
+            { "name": "segment", "type": "character varying" }
+        ]
+    },
+    {
+        "table": "customers",
+        "rows": null,
+        "columns": [
+            { "name": "customerid", "type": "bigint" },
+            { "name": "segment", "type": "character varying" },
+            { "name": "currency", "type": "character varying" }
+        ]
+    }
+    
+,
+{
+    "table": "user_record",
+    "rows": null,
+    "columns": [
+        { "name": "UserId", "type": "integer" },
+        { "name": "ViewCount", "type": "integer" },
+        { "name": "FavoriteCount", "type": "integer" },
+        { "name": "UpvoteCount", "type": "integer" },
+        { "name": "created_at", "type": "timestamp with time zone" },
+        { "name": "updated_at", "type": "timestamp with time zone" },
+        { "name": "last_login", "type": "timestamp with time zone" },
+        { "name": "user_status", "type": "character varying(50)" },
+        { "name": "profile_description", "type": "character varying" },
+        { "name": "karma_score", "type": "integer" },
+        { "name": "is_moderator", "type": "boolean" },
+        { "name": "preferences", "type": "jsonb" },
+        { "name": "location", "type": "character varying(100)" },
+        { "name": "registration_ip", "type": "character varying(45)" },
+        { "name": "email_verified", "type": "boolean" },
+        { "name": "internal_notes", "type": "character varying" }
+    ]
+}
+]

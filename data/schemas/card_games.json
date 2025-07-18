@@ -1,0 +1,734 @@
+[
+  {
+    "table": "card_choice",
+    "rows": 3,
+    "columns": [
+      {
+        "name": "id",
+        "type": "integer"
+      },
+      {
+        "name": "card_id",
+        "type": "integer"
+      },
+      {
+        "name": "non_valid_cards",
+        "type": "jsonb"
+      }
+    ]
+  },
+  {
+    "table": "card_type",
+    "rows": 5,
+    "columns": [
+      {
+        "name": "cardid",
+        "type": "integer"
+      },
+      {
+        "name": "type",
+        "type": "character varying"
+      }
+    ]
+  },
+  {
+    "table": "cards",
+    "rows": 652,
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "artist",
+        "type": "character varying"
+      },
+      {
+        "name": "asciiname",
+        "type": "character varying"
+      },
+      {
+        "name": "availability",
+        "type": "character varying"
+      },
+      {
+        "name": "bordercolor",
+        "type": "character varying"
+      },
+      {
+        "name": "cardkingdomfoilid",
+        "type": "character varying"
+      },
+      {
+        "name": "cardkingdomid",
+        "type": "character varying"
+      },
+      {
+        "name": "coloridentity",
+        "type": "character varying"
+      },
+      {
+        "name": "colorindicator",
+        "type": "character varying"
+      },
+      {
+        "name": "colors",
+        "type": "character varying"
+      },
+      {
+        "name": "convertedmanacost",
+        "type": "real"
+      },
+      {
+        "name": "dueldeck",
+        "type": "character varying"
+      },
+      {
+        "name": "edhrecrank",
+        "type": "bigint"
+      },
+      {
+        "name": "faceconvertedmanacost",
+        "type": "real"
+      },
+      {
+        "name": "facename",
+        "type": "character varying"
+      },
+      {
+        "name": "flavorname",
+        "type": "character varying"
+      },
+      {
+        "name": "flavortext",
+        "type": "character varying"
+      },
+      {
+        "name": "frameeffects",
+        "type": "character varying"
+      },
+      {
+        "name": "frameversion",
+        "type": "character varying"
+      },
+      {
+        "name": "hand",
+        "type": "character varying"
+      },
+      {
+        "name": "hasalternativedecklimit",
+        "type": "bigint"
+      },
+      {
+        "name": "hascontentwarning",
+        "type": "bigint"
+      },
+      {
+        "name": "hasfoil",
+        "type": "bigint"
+      },
+      {
+        "name": "hasnonfoil",
+        "type": "bigint"
+      },
+      {
+        "name": "isalternative",
+        "type": "bigint"
+      },
+      {
+        "name": "isfullart",
+        "type": "bigint"
+      },
+      {
+        "name": "isonlineonly",
+        "type": "bigint"
+      },
+      {
+        "name": "isoversized",
+        "type": "bigint"
+      },
+      {
+        "name": "ispromo",
+        "type": "bigint"
+      },
+      {
+        "name": "isreprint",
+        "type": "bigint"
+      },
+      {
+        "name": "isreserved",
+        "type": "bigint"
+      },
+      {
+        "name": "isstarter",
+        "type": "bigint"
+      },
+      {
+        "name": "isstoryspotlight",
+        "type": "bigint"
+      },
+      {
+        "name": "istextless",
+        "type": "bigint"
+      },
+      {
+        "name": "istimeshifted",
+        "type": "bigint"
+      },
+      {
+        "name": "keywords",
+        "type": "character varying"
+      },
+      {
+        "name": "layout",
+        "type": "character varying"
+      },
+      {
+        "name": "leadershipskills",
+        "type": "character varying"
+      },
+      {
+        "name": "life",
+        "type": "character varying"
+      },
+      {
+        "name": "loyalty",
+        "type": "character varying"
+      },
+      {
+        "name": "manacost",
+        "type": "character varying"
+      },
+      {
+        "name": "mcmid",
+        "type": "character varying"
+      },
+      {
+        "name": "mcmmetaid",
+        "type": "character varying"
+      },
+      {
+        "name": "mtgarenaid",
+        "type": "character varying"
+      },
+      {
+        "name": "mtgjsonv4id",
+        "type": "character varying"
+      },
+      {
+        "name": "mtgofoilid",
+        "type": "character varying"
+      },
+      {
+        "name": "mtgoid",
+        "type": "character varying"
+      },
+      {
+        "name": "multiverseid",
+        "type": "character varying"
+      },
+      {
+        "name": "name",
+        "type": "character varying"
+      },
+      {
+        "name": "number",
+        "type": "character varying"
+      },
+      {
+        "name": "originalreleasedate",
+        "type": "character varying"
+      },
+      {
+        "name": "originaltext",
+        "type": "character varying"
+      },
+      {
+        "name": "originaltype",
+        "type": "character varying"
+      },
+      {
+        "name": "otherfaceids",
+        "type": "character varying"
+      },
+      {
+        "name": "power",
+        "type": "character varying"
+      },
+      {
+        "name": "printings",
+        "type": "character varying"
+      },
+      {
+        "name": "promotypes",
+        "type": "character varying"
+      },
+      {
+        "name": "purchaseurls",
+        "type": "character varying"
+      },
+      {
+        "name": "rarity",
+        "type": "character varying"
+      },
+      {
+        "name": "scryfallid",
+        "type": "character varying"
+      },
+      {
+        "name": "scryfallillustrationid",
+        "type": "character varying"
+      },
+      {
+        "name": "scryfalloracleid",
+        "type": "character varying"
+      },
+      {
+        "name": "setcode",
+        "type": "character varying"
+      },
+      {
+        "name": "side",
+        "type": "character varying"
+      },
+      {
+        "name": "subtypes",
+        "type": "character varying"
+      },
+      {
+        "name": "supertypes",
+        "type": "character varying"
+      },
+      {
+        "name": "tcgplayerproductid",
+        "type": "character varying"
+      },
+      {
+        "name": "text",
+        "type": "character varying"
+      },
+      {
+        "name": "toughness",
+        "type": "character varying"
+      },
+      {
+        "name": "type",
+        "type": "character varying"
+      },
+      {
+        "name": "types",
+        "type": "character varying"
+      },
+      {
+        "name": "uuid",
+        "type": "character varying"
+      },
+      {
+        "name": "variations",
+        "type": "character varying"
+      },
+      {
+        "name": "watermark",
+        "type": "character varying"
+      }
+    ]
+  },
+  {
+    "table": "cards_info",
+    "rows": 3,
+    "columns": [
+      {
+        "name": "id",
+        "type": "integer"
+      },
+      {
+        "name": "name",
+        "type": "character varying"
+      }
+    ]
+  },
+  {
+    "table": "contents",
+    "rows": 6,
+    "columns": [
+      {
+        "name": "packageid",
+        "type": "integer"
+      },
+      {
+        "name": "item",
+        "type": "character varying"
+      },
+      {
+        "name": "size",
+        "type": "character"
+      },
+      {
+        "name": "content_id",
+        "type": "bigint"
+      },
+      {
+        "name": "added_at",
+        "type": "timestamp with time zone"
+      },
+      {
+        "name": "quantity",
+        "type": "integer"
+      },
+      {
+        "name": "unit_price",
+        "type": "numeric"
+      },
+      {
+        "name": "condition",
+        "type": "character varying"
+      },
+      {
+        "name": "notes",
+        "type": "character varying"
+      },
+      {
+        "name": "is_serialized",
+        "type": "boolean"
+      },
+      {
+        "name": "serial_number",
+        "type": "character varying"
+      },
+      {
+        "name": "custom_properties",
+        "type": "jsonb"
+      },
+      {
+        "name": "item_sku",
+        "type": "character varying"
+      },
+      {
+        "name": "origin_country",
+        "type": "character varying"
+      },
+      {
+        "name": "last_checked_by",
+        "type": "character varying"
+      },
+      {
+        "name": "check_timestamp",
+        "type": "timestamp with time zone"
+      }
+    ]
+  },
+  {
+    "table": "foreign_data",
+    "rows": 229186,
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "flavortext",
+        "type": "character varying"
+      },
+      {
+        "name": "language",
+        "type": "character varying"
+      },
+      {
+        "name": "multiverseid",
+        "type": "bigint"
+      },
+      {
+        "name": "name",
+        "type": "character varying"
+      },
+      {
+        "name": "text",
+        "type": "character varying"
+      },
+      {
+        "name": "type",
+        "type": "character varying"
+      },
+      {
+        "name": "uuid",
+        "type": "character varying"
+      }
+    ]
+  },
+  {
+    "table": "info",
+    "rows": 30,
+    "columns": [
+      {
+        "name": "cardid",
+        "type": "integer"
+      },
+      {
+        "name": "info",
+        "type": "character varying"
+      }
+    ]
+  },
+  {
+    "table": "legalities",
+    "rows": 427907,
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "format",
+        "type": "character varying"
+      },
+      {
+        "name": "status",
+        "type": "character varying"
+      },
+      {
+        "name": "uuid",
+        "type": "character varying"
+      }
+    ]
+  },
+  {
+    "table": "packages",
+    "rows": 3,
+    "columns": [
+      {
+        "name": "id",
+        "type": "integer"
+      },
+      {
+        "name": "name",
+        "type": "character varying"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp with time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp with time zone"
+      },
+      {
+        "name": "description",
+        "type": "character varying"
+      },
+      {
+        "name": "status",
+        "type": "character varying"
+      },
+      {
+        "name": "priority",
+        "type": "integer"
+      },
+      {
+        "name": "weight_kg",
+        "type": "numeric"
+      },
+      {
+        "name": "is_fragile",
+        "type": "boolean"
+      },
+      {
+        "name": "metadata",
+        "type": "jsonb"
+      },
+      {
+        "name": "tracking_id",
+        "type": "uuid"
+      },
+      {
+        "name": "last_scanned_location",
+        "type": "character varying"
+      },
+      {
+        "name": "estimated_delivery_date",
+        "type": "date"
+      },
+      {
+        "name": "internal_notes",
+        "type": "character varying"
+      },
+      {
+        "name": "version",
+        "type": "bigint"
+      }
+    ]
+  },
+  {
+    "table": "rulings",
+    "rows": 1641,
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "date",
+        "type": "date"
+      },
+      {
+        "name": "text",
+        "type": "character varying"
+      },
+      {
+        "name": "uuid",
+        "type": "character varying"
+      }
+    ]
+  },
+  {
+    "table": "set_translations",
+    "rows": 1210,
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "language",
+        "type": "character varying"
+      },
+      {
+        "name": "setcode",
+        "type": "character varying"
+      },
+      {
+        "name": "translation",
+        "type": "character varying"
+      }
+    ]
+  },
+  {
+    "table": "sets",
+    "rows": 551,
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "basesetsize",
+        "type": "bigint"
+      },
+      {
+        "name": "block",
+        "type": "character varying"
+      },
+      {
+        "name": "booster",
+        "type": "character varying"
+      },
+      {
+        "name": "code",
+        "type": "character varying"
+      },
+      {
+        "name": "isfoilonly",
+        "type": "bigint"
+      },
+      {
+        "name": "isforeignonly",
+        "type": "bigint"
+      },
+      {
+        "name": "isnonfoilonly",
+        "type": "bigint"
+      },
+      {
+        "name": "isonlineonly",
+        "type": "bigint"
+      },
+      {
+        "name": "ispartialpreview",
+        "type": "bigint"
+      },
+      {
+        "name": "keyrunecode",
+        "type": "character varying"
+      },
+      {
+        "name": "mcmid",
+        "type": "bigint"
+      },
+      {
+        "name": "mcmidextras",
+        "type": "bigint"
+      },
+      {
+        "name": "mcmname",
+        "type": "character varying"
+      },
+      {
+        "name": "mtgocode",
+        "type": "character varying"
+      },
+      {
+        "name": "name",
+        "type": "character varying"
+      },
+      {
+        "name": "parentcode",
+        "type": "character varying"
+      },
+      {
+        "name": "releasedate",
+        "type": "date"
+      },
+      {
+        "name": "tcgplayergroupid",
+        "type": "bigint"
+      },
+      {
+        "name": "totalsetsize",
+        "type": "bigint"
+      },
+      {
+        "name": "type",
+        "type": "character varying"
+      }
+    ]
+  },
+  {
+    "table": "user_actions",
+    "rows": 9,
+    "columns": [
+      {
+        "name": "user_id",
+        "type": "character varying"
+      },
+      {
+        "name": "action",
+        "type": "character varying"
+      },
+      {
+        "name": "action_time",
+        "type": "date"
+      }
+    ]
+  },
+  {
+    "table": "card_release",
+    "rows": 9,
+    "columns": [
+      {
+        "name": "release_id",
+        "type": "integer"
+      },
+      {
+        "name": "code_id",
+        "type": "integer"
+      },
+      {
+        "name": "code_status_id",
+        "type": "smallint"
+      },
+      {
+        "name": "code_created_date",
+        "type": "timestamp"
+      }
+    ]
+  }
+]

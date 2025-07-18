@@ -1,0 +1,316 @@
+[
+  {
+    "table": "alignment",
+    "rows": 4,
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "alignment",
+        "type": "character varying"
+      }
+    ]
+  },
+  {
+    "table": "attribute",
+    "rows": 6,
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "attribute_name",
+        "type": "character varying"
+      }
+    ]
+  },
+  {
+    "table": "colour",
+    "rows": 35,
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "colour",
+        "type": "character varying"
+      }
+    ]
+  },
+  {
+    "table": "gender",
+    "rows": 3,
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "gender",
+        "type": "character varying"
+      }
+    ]
+  },
+  {
+    "table": "hero_attribute",
+    "rows": 3738,
+    "columns": [
+      {
+        "name": "hero_id",
+        "type": "bigint"
+      },
+      {
+        "name": "attribute_id",
+        "type": "bigint"
+      },
+      {
+        "name": "attribute_value",
+        "type": "bigint"
+      }
+    ]
+  },
+  {
+    "table": "hero_power",
+    "rows": 5825,
+    "columns": [
+      {
+        "name": "hero_id",
+        "type": "bigint"
+      },
+      {
+        "name": "power_id",
+        "type": "bigint"
+      }
+    ]
+  },
+  {
+    "table": "member_privileges",
+    "rows": 0,
+    "columns": [
+      {
+        "name": "privilege_id",
+        "type": "integer"
+      },
+      {
+        "name": "member_id",
+        "type": "character varying"
+      },
+      {
+        "name": "privilege_level",
+        "type": "character varying"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp with time zone"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp with time zone"
+      },
+      {
+        "name": "granted_by_user_id",
+        "type": "character varying"
+      },
+      {
+        "name": "grant_date",
+        "type": "date"
+      },
+      {
+        "name": "expiry_date",
+        "type": "date"
+      },
+      {
+        "name": "is_active",
+        "type": "boolean"
+      },
+      {
+        "name": "notes",
+        "type": "character varying"
+      },
+      {
+        "name": "audit_log",
+        "type": "jsonb"
+      },
+      {
+        "name": "version",
+        "type": "integer"
+      },
+      {
+        "name": "last_verified_date",
+        "type": "timestamp with time zone"
+      },
+      {
+        "name": "privilege_scope",
+        "type": "character varying"
+      },
+      {
+        "name": "approval_status",
+        "type": "character varying"
+      },
+      {
+        "name": "reference_code",
+        "type": "uuid"
+      }
+    ]
+  },
+  {
+    "table": "publisher",
+    "rows": 25,
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "publisher_name",
+        "type": "character varying"
+      }
+    ]
+  },
+  {
+    "table": "race",
+    "rows": 61,
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "race",
+        "type": "character varying"
+      }
+    ]
+  },
+  {
+    "table": "superhero",
+    "rows": 750,
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "superhero_name",
+        "type": "character varying"
+      },
+      {
+        "name": "full_name",
+        "type": "character varying"
+      },
+      {
+        "name": "gender_id",
+        "type": "bigint"
+      },
+      {
+        "name": "eye_colour_id",
+        "type": "bigint"
+      },
+      {
+        "name": "hair_colour_id",
+        "type": "bigint"
+      },
+      {
+        "name": "skin_colour_id",
+        "type": "bigint"
+      },
+      {
+        "name": "race_id",
+        "type": "bigint"
+      },
+      {
+        "name": "publisher_id",
+        "type": "bigint"
+      },
+      {
+        "name": "alignment_id",
+        "type": "bigint"
+      },
+      {
+        "name": "height_cm",
+        "type": "bigint"
+      },
+      {
+        "name": "weight_kg",
+        "type": "bigint"
+      }
+    ]
+  },
+  {
+    "table": "superhero_group",
+    "rows": 9,
+    "columns": [
+      {
+        "name": "id",
+        "type": "integer"
+      },
+      {
+        "name": "subgroup1",
+        "type": "integer"
+      },
+      {
+        "name": "subgroup2",
+        "type": "integer"
+      }
+    ]
+  },
+  {
+    "table": "superpower",
+    "rows": 167,
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "power_name",
+        "type": "character varying"
+      }
+    ]
+  },
+
+  {
+    "table": "hero_birth_info",
+    "rows": 8,
+    "columns": [
+      { "name": "id", "type": "bigint" },
+      { "name": "hero_name", "type": "character varying" },
+      { "name": "birthdate", "type": "date" },
+      { "name": "created_at", "type": "timestamp with time zone", "default": "CURRENT_TIMESTAMP" },
+      { "name": "updated_at", "type": "timestamp with time zone", "default": "CURRENT_TIMESTAMP" },
+      { "name": "origin_story", "type": "character varying", "default": "'Unknown origin'" },
+      { "name": "power_level", "type": "integer", "default": 5 },
+      { "name": "is_active", "type": "boolean", "default": true },
+      { "name": "last_appearance_date", "type": "date" },
+      { "name": "secret_identity_known", "type": "boolean", "default": false },
+      { "name": "universe_designation", "type": "character varying", "length": 50, "default": "'Earth-616'" },
+      { "name": "metadata", "type": "jsonb", "default": "'{}'::jsonb" },
+      { "name": "version_number", "type": "integer", "default": 1 },
+      { "name": "notes", "type": "character varying" },
+      { "name": "popularity_rating", "type": "numeric", "precision": 5, "scale": 2, "default": 0.0 }
+    ]
+  },
+  {
+    "table": "hero_birth_info_alt",
+    "rows": 5,
+    "columns": [
+      { "name": "id", "type": "bigint" },
+      { "name": "hero_name", "type": "character varying" },
+      { "name": "date_of_birth", "type": "date" },
+      { "name": "verification_status", "type": "character varying", "length": 50, "default": "'unverified'" },
+      { "name": "source_reliability", "type": "integer", "default": 3 },
+      { "name": "last_verified_date", "type": "timestamp with time zone" },
+      { "name": "verification_notes", "type": "character varying" },
+      { "name": "conflicting_records", "type": "boolean", "default": false },
+      { "name": "record_confidence_score", "type": "numeric", "precision": 5, "scale": 2, "default": 5.0 },
+      { "name": "created_by", "type": "character varying", "length": 100, "default": "'system'" },
+      { "name": "created_at", "type": "timestamp with time zone", "default": "CURRENT_TIMESTAMP" },
+      { "name": "updated_at", "type": "timestamp with time zone", "default": "CURRENT_TIMESTAMP" },
+      { "name": "data_source", "type": "character varying", "length": 200, "default": "'internal database'" },
+      { "name": "record_version", "type": "integer", "default": 1 }
+    ]
+  }
+]

@@ -1,0 +1,290 @@
+[
+  {
+    "table": "badges",
+    "rows": 79851,
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "userid",
+        "type": "bigint"
+      },
+      {
+        "name": "name",
+        "type": "character varying"
+      },
+      {
+        "name": "date",
+        "type": "timestamp with time zone"
+      }
+    ]
+  },
+  {
+    "table": "comments",
+    "rows": 171450,
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "postid",
+        "type": "bigint"
+      },
+      {
+        "name": "score",
+        "type": "bigint"
+      },
+      {
+        "name": "text",
+        "type": "character varying"
+      },
+      {
+        "name": "creationdate",
+        "type": "timestamp with time zone"
+      },
+      {
+        "name": "userid",
+        "type": "bigint"
+      },
+      {
+        "name": "userdisplayname",
+        "type": "character varying"
+      }
+    ]
+  },
+  {
+    "table": "posthistory",
+    "rows": 303155,
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "posthistorytypeid",
+        "type": "bigint"
+      },
+      {
+        "name": "postid",
+        "type": "bigint"
+      },
+      {
+        "name": "revisionguid",
+        "type": "character varying"
+      },
+      {
+        "name": "creationdate",
+        "type": "timestamp with time zone"
+      },
+      {
+        "name": "userid",
+        "type": "bigint"
+      },
+      {
+        "name": "text",
+        "type": "character varying"
+      },
+      {
+        "name": "comment",
+        "type": "character varying"
+      },
+      {
+        "name": "userdisplayname",
+        "type": "character varying"
+      }
+    ]
+  },
+  {
+    "table": "postlinks",
+    "rows": 11102,
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "creationdate",
+        "type": "timestamp with time zone"
+      },
+      {
+        "name": "postid",
+        "type": "bigint"
+      },
+      {
+        "name": "relatedpostid",
+        "type": "bigint"
+      },
+      {
+        "name": "linktypeid",
+        "type": "bigint"
+      }
+    ]
+  },
+  {
+    "table": "posts",
+    "rows": 5,
+    "columns": [
+      {
+        "name": "id",
+        "type": "integer"
+      },
+      {
+        "name": "posttypeid",
+        "type": "integer"
+      },
+      {
+        "name": "tags",
+        "type": "character varying"
+      }
+    ]
+  },
+  {
+    "table": "posts_backup",
+    "rows": 91966,
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "posttypeid",
+        "type": "bigint"
+      },
+      {
+        "name": "acceptedanswerid",
+        "type": "bigint"
+      },
+      {
+        "name": "creaiondate",
+        "type": "timestamp with time zone"
+      },
+      {
+        "name": "score",
+        "type": "bigint"
+      },
+      {
+        "name": "viewcount",
+        "type": "bigint"
+      },
+      {
+        "name": "body",
+        "type": "character varying"
+      },
+      {
+        "name": "owneruserid",
+        "type": "bigint"
+      },
+      {
+        "name": "lasactivitydate",
+        "type": "timestamp with time zone"
+      },
+      {
+        "name": "title",
+        "type": "character varying"
+      },
+      {
+        "name": "tags",
+        "type": "character varying"
+      },
+      {
+        "name": "answercount",
+        "type": "bigint"
+      },
+      {
+        "name": "commentcount",
+        "type": "bigint"
+      },
+      {
+        "name": "favoritecount",
+        "type": "bigint"
+      },
+      {
+        "name": "lasteditoruserid",
+        "type": "bigint"
+      },
+      {
+        "name": "lasteditdate",
+        "type": "timestamp with time zone"
+      },
+      {
+        "name": "communityowneddate",
+        "type": "timestamp with time zone"
+      },
+      {
+        "name": "parentid",
+        "type": "bigint"
+      },
+      {
+        "name": "closeddate",
+        "type": "timestamp with time zone"
+      },
+      {
+        "name": "ownerdisplayname",
+        "type": "character varying"
+      },
+      {
+        "name": "lasteditordisplayname",
+        "type": "character varying"
+      }
+    ]
+  },
+  {
+    "table": "tags",
+    "rows": 1032,
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "tagname",
+        "type": "character varying"
+      },
+      {
+        "name": "count",
+        "type": "bigint"
+      },
+      {
+        "name": "excerptpostid",
+        "type": "bigint"
+      },
+      {
+        "name": "wikipostid",
+        "type": "bigint"
+      }
+    ]
+  },
+  {
+    "table": "votes",
+    "rows": 38930,
+    "columns": [
+      {
+        "name": "id",
+        "type": "bigint"
+      },
+      {
+        "name": "postid",
+        "type": "bigint"
+      },
+      {
+        "name": "votetypeid",
+        "type": "bigint"
+      },
+      {
+        "name": "creationdate",
+        "type": "date"
+      },
+      {
+        "name": "userid",
+        "type": "bigint"
+      },
+      {
+        "name": "bountyamount",
+        "type": "bigint"
+      }
+    ]
+  }
+]

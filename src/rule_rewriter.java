@@ -129,7 +129,7 @@ public class rule_rewriter {
     String newpath = modifiedPath.toString();
 
     // changed
-    JSONArray schemaJson = Utils.readJsonFile(newpath+"/BQR/data/data_llmr2/schemas/" + db_id + ".json");
+    JSONArray schemaJson = Utils.readJsonFile(newpath+"/BQR/data/schemas/" + db_id + ".json");
 // change to align python
 //    JSONArray schemaJson = Utils.readJsonFile(path+"/main/schema.json");
     Rewriter rewriter = new Rewriter(schemaJson);
@@ -172,7 +172,7 @@ public class rule_rewriter {
     System.out.println("Execution time: " + duration + " ms");
 
     // Append execution time to a txt file
-    try (java.io.FileWriter fw = new java.io.FileWriter("./execution_time.txt", true)) {
+    try (java.io.FileWriter fw = new java.io.FileWriter("../execution_time.txt", true)) {
         fw.write("Execution time: " + duration + " ms\n");
     } catch (IOException e) {
         e.printStackTrace();
@@ -182,7 +182,8 @@ public class rule_rewriter {
 //     HepPlanner hepPlanner = new HepPlanner(builder.addMatchOrder(HepMatchOrder.TOP_DOWN).build());
 //     hepPlanner.setRoot(testRelNode);
 //     RelNode rewrite_result = hepPlanner.findBestExp();
-    System.out.println(testRelNode.explain());
+
+    // System.out.println(testRelNode.explain());
     System.out.println(rewrite_result.explain());
     String rewrite_sql = converter.visitRoot(rewrite_result).asStatement().toSqlString(PostgresqlSqlDialect.DEFAULT).getSql();
 //     String rewrite_sql = converter.visitRoot(rewrite_result).asStatement().toSqlString(dialect).getSql();

@@ -1,0 +1,116 @@
+[
+  {
+    "table": "atom",
+    "rows": 9111,
+    "columns": [
+      {
+        "name": "atom_id",
+        "type": "character varying"
+      },
+      {
+        "name": "molecule_id",
+        "type": "character varying"
+      },
+      {
+        "name": "element",
+        "type": "character varying"
+      }
+    ]
+  },
+  {
+    "table": "bond",
+    "rows": 9156,
+    "columns": [
+      {
+        "name": "bond_id",
+        "type": "character varying"
+      },
+      {
+        "name": "molecule_id",
+        "type": "character varying"
+      },
+      {
+        "name": "bond_type",
+        "type": "character varying"
+      }
+    ]
+  },
+  {
+    "table": "bond_list",
+    "rows": 24,
+    "columns": [
+      {
+        "name": "bond_id",
+        "type": "character varying"
+      },
+      {
+        "name": "molecule_id",
+        "type": "character varying"
+      },
+      {
+        "name": "bond_type",
+        "type": "character varying"
+      },
+      {
+        "name": "transact_dt_tm",
+        "type": "date"
+      }
+    ]
+  },
+  {
+    "table": "bond_ref",
+    "rows": 20,
+    "columns": [
+      {
+        "name": "bond_type",
+        "type": "character varying"
+      },
+      {
+        "name": "bond_seq",
+        "type": "integer"
+      }
+    ]
+  },
+  {
+    "table": "connected",
+    "rows": 18312,
+    "columns": [
+      {
+        "name": "atom_id",
+        "type": "character varying"
+      },
+      {
+        "name": "atom_id2",
+        "type": "character varying"
+      },
+      {
+        "name": "bond_id",
+        "type": "character varying"
+      }
+    ]
+  },
+  {
+    "table": "molecule",
+    "rows": 343,
+    "columns": [
+      {
+        "name": "molecule_id",
+        "type": "character varying"
+      },
+      {
+        "name": "label",
+        "type": "character varying"
+      }
+    ]
+  },
+  {
+    "table": "test",
+    "rows": 9073,
+    "columns": [
+      {
+        "name": "atom_id",
+        "type": "character varying"
+      }
+    ]
+  }
+]
