@@ -19,35 +19,33 @@ FLATTEN_RULES = [
 
 def process_single_flatten_query(args: Tuple[int, str, str, Dict, Dict]) -> Dict[str, Any]:
     """
-    处理单个flatten查询的函数（用于并行化）
+    Function to process a single flatten query (for parallelization)
     
     Args:
         args: (idx, sql, database, sub_map, db_config)
     
     Returns:
-        Dict: 包含处理结果的字典
+        Dict: Dictionary containing the processing result
     """
     idx, sql, database, sub_map, db_config = args
     
     try:
-        print(f"  🔄 开始处理 Masked SQL {idx} - flatten rules")
         
-        # 调用rewriter
         rewritten = call_rewriter(database, sql, FLATTEN_RULES)
         rewritten = rewritten.replace("$", "")
         
-        print(f"  📝 Masked SQL {idx} - before rewrite: {sql[:100]}...")
-        print(f"  📝 Masked SQL {idx} - after rewrite: {rewritten[:100]}...")
+        print(f"  Masked SQL {idx} - before rewrite: {sql[:100]}...")
+        print(f"  Masked SQL {idx} - after rewrite: {rewritten[:100]}...")
         
-        # 还原占位符
+
         restored = restore_placeholders(rewritten, sub_map, db_config)
         
-        # 计算成本
+
         new_cost = get_query_cost(db_config, restored)
         if new_cost < 1:
             new_cost = float("inf")
         
-        print(f"  ✅ Masked SQL {idx} 处理完成，成本: {new_cost:.2f}")
+        print(f"  Masked SQL {idx} finished, cost: {new_cost:.2f}")
         
         return {
             'idx': idx,
@@ -59,7 +57,7 @@ def process_single_flatten_query(args: Tuple[int, str, str, Dict, Dict]) -> Dict
         }
         
     except Exception as e:
-        print(f"  ❌ Masked SQL {idx} 处理失败: {e}")
+        print(f"   Masked SQL {idx} fail: {e}")
         return {
             'idx': idx,
             'sql': sql,
@@ -88,7 +86,7 @@ def apply_flatten_rules_parallel(
     Returns:
         str: 最优的SQL查询
     """
-    print("\n======step3: 并行应用 FLATTEN RULES======")
+    print("\n======FLATTEN RULES======")
     
     original_sql = masked_subqueries[0]
     base_cost = get_query_cost(db_config, original_sql)
@@ -127,7 +125,6 @@ def apply_flatten_rules_parallel(
     results.sort(key=lambda x: x['idx'])
     
     processing_time = time.time() - start_time
-    print(f"⏱️ 并行处理完成，耗时: {processing_time:.2f}秒")
     
     # 找到最佳结果
     best_delta = 0
@@ -139,14 +136,11 @@ def apply_flatten_rules_parallel(
         idx = result['idx']
         
         if result['status'] == 'error':
-            print(f"  [跳过] Masked SQL {idx} 规则应用失败: {result.get('error', 'Unknown error')}")
             continue
         
         new_cost = result['new_cost']
         delta = base_cost - new_cost
         
-        print(f"  Masked SQL {idx} 应用 FLATTEN RULES：成本 {base_cost:.2f} → {new_cost:.2f}，降低 {delta:.2f}")
-        print("-------")
         
         if delta > best_delta:
             best_delta = delta
@@ -194,8 +188,6 @@ def apply_flatten_rules_batch_parallel(
     if database == "tpch10g" or database == "tpch5g" or database == "tpch1g":
         database = "tpch"
     
-    print(f"原始SQL成本: {base_cost:.2f}")
-    print(f"开始分批并行处理 {len(masked_subqueries)} 个masked queries...")
     
     all_results = []
     total_batches = (len(masked_subqueries) + batch_size - 1) // batch_size
@@ -204,7 +196,7 @@ def apply_flatten_rules_batch_parallel(
         batch_queries = masked_subqueries[batch_idx:batch_idx + batch_size]
         batch_num = batch_idx // batch_size + 1
         
-        print(f"\n--- 处理第 {batch_num}/{total_batches} 批 ({len(batch_queries)} 个queries) ---")
+        # print(f"\n--- 处理第 {batch_num}/{total_batches} 批 ({len(batch_queries)} 个queries) ---")
         
         # 准备当前批次的参数
         parallel_args = [
@@ -238,7 +230,7 @@ def apply_flatten_rules_batch_parallel(
         idx = result['idx']
         
         if result['status'] == 'error':
-            print(f"  [跳过] Masked SQL {idx} 规则应用失败: {result.get('error', 'Unknown error')}")
+            # print(f"  [跳过] Masked SQL {idx} 规则应用失败: {result.get('error', 'Unknown error')}")
             continue
         
         new_cost = result['new_cost']
