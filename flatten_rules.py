@@ -75,58 +75,55 @@ def apply_flatten_rules_parallel(
     max_workers: int = 4
 ) -> str:
     """
-    并行版本的apply_flatten_rules
-    
+    Parallel version of apply_flatten_rules
+
     Args:
-        masked_subqueries: 被masked的子查询列表
-        db_config: 数据库配置
-        sub_map: 子查询占位符映射
-        max_workers: 最大并行工作线程数
-    
+        masked_subqueries: List of masked subqueries
+        db_config: Database configuration
+        sub_map: Mapping of subquery placeholders
+        max_workers: Maximum number of parallel worker threads
+
     Returns:
-        str: 最优的SQL查询
+        str: The optimal SQL query
     """
     print("\n======FLATTEN RULES======")
     
     original_sql = masked_subqueries[0]
     base_cost = get_query_cost(db_config, original_sql)
     
-    # 准备数据库名称
     database = db_config["database"]
     if database == "tpch10g" or database == "tpch5g" or database == "tpch1g":
         database = "tpch"
     
-    print(f"原始SQL成本: {base_cost:.2f}")
-    print(f"开始并行处理 {len(masked_subqueries)} 个masked queries...")
+    print(f"original cost: {base_cost:.2f}")
+    print(f"start to process {len(masked_subqueries)} masked queries...")
     
-    # 准备并行处理的参数
+    # prepare parallel arguments
     parallel_args = [
         (idx, sql, database, sub_map, db_config)
         for idx, sql in enumerate(masked_subqueries)
     ]
     
-    # 并行处理所有masked queries
+    # parallel processing
     results = []
     start_time = time.time()
     
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
-        # 提交所有任务
         future_to_idx = {
             executor.submit(process_single_flatten_query, args): args[0]
             for args in parallel_args
         }
         
-        # 收集结果
+
         for future in as_completed(future_to_idx):
             result = future.result()
             results.append(result)
-    
-    # 按索引排序
+
     results.sort(key=lambda x: x['idx'])
     
     processing_time = time.time() - start_time
     
-    # 找到最佳结果
+    # greddy selection of the best result
     best_delta = 0
     best_sql = None
     best_idx = -1
@@ -148,14 +145,14 @@ def apply_flatten_rules_parallel(
             best_idx = idx
             best_new_sql = result['restored']
     
-    # 输出最终结果
+    # output final result
     if best_delta > 0 and best_new_sql:
-        print(f"[选择] Masked SQL {best_idx} 应用FLATTEN_RULES，成本降低 {best_delta:.2f}")
+        print(f"Masked SQL {best_idx} uses FLATTEN_RULES, cost decline {best_delta:.2f}")
     else:
         best_new_sql = original_sql
-        print("[终止] 没有进一步成本降低")
+        print("no more cost reduction, stop applying FLATTEN_RULES")
     
-    print(f"  最终子查询 SQL: {best_new_sql}")
+    print(f"  final SQL: {best_new_sql}")
     return best_new_sql
 
 def apply_flatten_rules_batch_parallel(
@@ -166,24 +163,24 @@ def apply_flatten_rules_batch_parallel(
     max_workers: int = 4
 ) -> str:
     """
-    分批并行处理大量masked queries
-    
+    Batch parallel processing of large numbers of masked queries
+
     Args:
-        masked_subqueries: 被masked的子查询列表
-        db_config: 数据库配置
-        sub_map: 子查询占位符映射
-        batch_size: 每批处理的数量
-        max_workers: 每批的最大并行工作线程数
-    
+        masked_subqueries: List of masked subqueries
+        db_config: Database configuration
+        sub_map: Mapping of subquery placeholders
+        batch_size: Number of queries per batch
+        max_workers: Maximum number of parallel worker threads per batch
+
     Returns:
-        str: 最优的SQL查询
+        str: The optimal SQL query
     """
-    print("\n======step3: 分批并行应用 FLATTEN RULES======")
+    print("\n======FLATTEN RULES======")
     
     original_sql = masked_subqueries[0]
     base_cost = get_query_cost(db_config, original_sql)
     
-    # 准备数据库名称
+    # prepare database config
     database = db_config["database"]
     if database == "tpch10g" or database == "tpch5g" or database == "tpch1g":
         database = "tpch"
@@ -196,15 +193,14 @@ def apply_flatten_rules_batch_parallel(
         batch_queries = masked_subqueries[batch_idx:batch_idx + batch_size]
         batch_num = batch_idx // batch_size + 1
         
-        # print(f"\n--- 处理第 {batch_num}/{total_batches} 批 ({len(batch_queries)} 个queries) ---")
         
-        # 准备当前批次的参数
+        # prepare parallel arguments for the current batch
         parallel_args = [
             (batch_idx + i, sql, database, sub_map, db_config)
             for i, sql in enumerate(batch_queries)
         ]
         
-        # 并行处理当前批次
+        # process
         with ThreadPoolExecutor(max_workers=max_workers) as executor:
             future_to_idx = {
                 executor.submit(process_single_flatten_query, args): args[0]
@@ -216,11 +212,11 @@ def apply_flatten_rules_batch_parallel(
                 result = future.result()
                 batch_results.append(result)
             
-            # 按索引排序
+            # sort results by index
             batch_results.sort(key=lambda x: x['idx'])
             all_results.extend(batch_results)
     
-    # 找到全局最佳结果
+    # greedy selection of the best result
     best_delta = 0
     best_sql = None
     best_idx = -1
@@ -230,13 +226,12 @@ def apply_flatten_rules_batch_parallel(
         idx = result['idx']
         
         if result['status'] == 'error':
-            # print(f"  [跳过] Masked SQL {idx} 规则应用失败: {result.get('error', 'Unknown error')}")
             continue
         
         new_cost = result['new_cost']
         delta = base_cost - new_cost
         
-        print(f"  Masked SQL {idx} 应用 FLATTEN RULES：成本 {base_cost:.2f} → {new_cost:.2f}，降低 {delta:.2f}")
+        print(f"  Masked SQL {idx} uses FLATTEN RULES: cost {base_cost:.2f} → {new_cost:.2f}, decline {delta:.2f}")
         
         if delta > best_delta:
             best_delta = delta
@@ -244,21 +239,18 @@ def apply_flatten_rules_batch_parallel(
             best_idx = idx
             best_new_sql = result['restored']
     
-    # 输出最终结果
     if best_delta > 0 and best_new_sql:
-        print(f"[选择] Masked SQL {best_idx} 应用FLATTEN_RULES，成本降低 {best_delta:.2f}")
+        print(f"Masked SQL {best_idx} uses FLATTEN_RULES, cost decline {best_delta:.2f}")
     else:
         best_new_sql = original_sql
-        print("[终止] 没有进一步成本降低")
+        print("no more cost reduction, stop applying FLATTEN_RULES")
     
-    print(f"  最终子查询 SQL: {best_new_sql}")
+    print(f"  final SQL: {best_new_sql}")
     return best_new_sql
 
-# 为了保持向后兼容，可以保留原函数名
+
 def apply_flatten_rules(masked_subqueries, db_config, sub_map):
-    """
-    兼容性函数：默认使用并行版本
-    """
+
     return apply_flatten_rules_parallel(
         masked_subqueries, 
         db_config, 
@@ -267,82 +259,4 @@ def apply_flatten_rules(masked_subqueries, db_config, sub_map):
     )
 
 
-
-
-
-
-
-# def apply_flatten_rules(masked_subqueries, db_config, sub_map):
-#     """
-#     Algorithm 3: 贪心推导扁平化规则
-
-#     参数:
-#     - fixed_subqueries: List of (original_sql, fixed_sql)
-#     - db_config: dict 类型，包含数据库连接信息
-#     - sub_map: 包含子查询占位符与原始子查询的映射关系
-#     """
-
-#     print("\n======step3: 应用 FLATTEN RULES======")
-
-#     original_sql = masked_subqueries[0]
-#     base_cost = get_query_cost(db_config, original_sql)
-
-#     idx = 0
-#     best_delta = 0
-#     best_sql = None
-#     best_idx = -1
-#     best_new_sql = None
-    
-
-#     for sql in masked_subqueries:
-#     # for sql in masked_subqueries[1:]:
-#         print(f"Masked SQL {idx}: flatten rules")
-#         current_sql = sql
-
-    
-#         # base_cost = get_query_cost(db_config, current_sql)
-
-#         try:
-#             # rule_list = [rule]
-#             database = db_config["database"]
-#             if database == "tpch10g":
-#                 database = "tpch"
-#             rewritten = call_rewriter(database, sql, FLATTEN_RULES)
-#             rewritten = rewritten.replace("$", "")
-#             print("before rewrite:", sql) 
-#             print("\n") 
-#             print("after rewrite:", rewritten)
-#             # 还原占位符
-#             restored = restore_placeholders(rewritten, sub_map,db_config)
-
-#             # restored = restore_masked_subqueries(rewritten, subqueries)
-#             # print("restored:", restored)
-#             # new_cost = get_query_cost(db_config, restored)
-#             new_cost = get_query_cost(db_config, restored)
-#             if(new_cost < 1):
-#                 new_cost = float("inf")
-#             delta = base_cost - new_cost
-#             print(f"\n  Masked SQL{idx} 应用 FLATTEN RULES：成本 {base_cost:.2f} → {new_cost:.2f}，降低 {delta:.2f}")
-#             print("-------")
-#             if delta > best_delta:
-#                 best_delta = delta
-#                 best_sql = sql
-#                 best_idx = idx
-#                 best_new_sql = restored
-#         except Exception as e:
-#             print(f"    [跳过] 规则应用失败: {e}")
-#         idx += 1
-
-
-#     if best_delta > 0 and best_new_sql:
-#         print(f"[选择] Masked SQL {best_idx} 应用FLATTEN_RULES，成本降低 {best_delta:.2f}")
-#         # current_sql = best_new_sql
-#     else:
-#         best_new_sql = original_sql
-#         print("[终止] 没有进一步成本降低")
-
-
-#     print(f"  最终子查询 SQL: {best_new_sql}")
-    
-#     return best_new_sql
 
