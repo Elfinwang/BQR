@@ -1,1 +1,1 @@
-# BQR: Towards Rewriting Arbitrarily Complex Analytical Queries Using Rules
+# BQR: Efficient Query Rewriting via Fine-Grained Sub-Query Decomposition
