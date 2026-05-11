@@ -1,9 +1,133 @@
 #构建语法树
+import json
+import re
+from collections import deque
+from dataclasses import dataclass
+from functools import lru_cache
+from pathlib import Path
+from typing import Dict, List, Optional, Set, Tuple
+
 from sqlglot import parse_one, exp
 from sqlglot.expressions import Expression
-from collections import deque
+
+from config import DB_CONFIG
+from rename_group_alias import align_group_by_with_select
 from utils.sql_parser import SQLParser
-from typing import Dict, Set, Tuple, List
+
+REPO_ROOT = Path(__file__).resolve().parent
+SCHEMA_DIR = REPO_ROOT / "data" / "schemas"
+DEFAULT_DB_ID = str(DB_CONFIG.get("database", "tpch")).strip()
+
+TPCH_PREFIX_TO_TABLE = {
+    "ps": "partsupp",
+    "l": "lineitem",
+    "p": "part",
+    "s": "supplier",
+    "c": "customer",
+    "o": "orders",
+    "n": "nation",
+    "r": "region",
+}
+
+
+@dataclass(frozen=True)
+class CorrelatedColumnReplacement:
+    original_sql: str
+    outer_alias: str
+    table_name: str
+    column_name: str
+    column_type: str
+    placeholder_column: str
+    placeholder_literal_sql: str
+    placeholder_match_sqls: Tuple[str, ...] = ()
+
+
+@dataclass(frozen=True)
+class StandaloneSubqueryPreparation:
+    original_sql: str
+    prepared_sql: str
+    placeholder_context_alias: str = ""
+    replacements: Tuple[CorrelatedColumnReplacement, ...] = ()
+    external_aliases: Tuple[str, ...] = ()
+
+
+def _schema_path(db_id: str) -> Path:
+    db = str(db_id or DEFAULT_DB_ID).strip()
+    return SCHEMA_DIR / f"{db}.json"
+
+
+@lru_cache(maxsize=16)
+def _load_schema_column_types(db_id: str) -> Dict[str, Dict[str, str]]:
+    path = _schema_path(db_id)
+    if not path.exists():
+        return {}
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    out: Dict[str, Dict[str, str]] = {}
+    for table in payload:
+        table_name = str(table.get("table") or "").lower()
+        cols: Dict[str, str] = {}
+        for col in table.get("columns", []):
+            col_name = str(col.get("name") or "").lower()
+            cols[col_name] = str(col.get("type") or "")
+        if cols:
+            out[table_name] = cols
+    return out
+
+
+def _placeholder_literal_for_type(type_name: str, token: str) -> str:
+    t = (type_name or "").strip().lower()
+    token_num = int(re.sub(r"\D+", "", token) or "0")
+
+    if any(x in t for x in ("char", "text", "string")):
+        raw_sql = f"'__DG_CORR_LITERAL_{token_num}__'"
+    elif "timestamp" in t:
+        month = (token_num % 12) + 1
+        day = (token_num % 27) + 1
+        second = token_num % 60
+        raw_sql = f"TIMESTAMP '1901-{month:02d}-{day:02d} 00:00:{second:02d}'"
+    elif t.startswith("date") or ("date" in t and "update" not in t):
+        month = (token_num % 12) + 1
+        day = (token_num % 27) + 1
+        raw_sql = f"DATE '1901-{month:02d}-{day:02d}'"
+    elif "time" in t and "timestamp" not in t:
+        second = token_num % 60
+        raw_sql = f"TIME '00:00:{second:02d}'"
+    elif "interval" in t:
+        raw_sql = f"INTERVAL '{1000 + token_num}' DAY"
+    elif "bool" in t:
+        raw_sql = "TRUE" if token_num % 2 == 0 else "FALSE"
+    elif any(x in t for x in ("numeric", "decimal", "double", "float", "real")):
+        raw_sql = str(-900000000.123 - token_num)
+    elif any(x in t for x in ("int", "number")):
+        raw_sql = str(-2147483000 - token_num)
+    else:
+        raw_sql = f"'__DG_CORR_LITERAL_{token_num}__'"
+
+    try:
+        return parse_one(raw_sql).sql()
+    except Exception:
+        return raw_sql
+
+
+def _placeholder_match_sqls(placeholder_literal_sql: str, type_name: str) -> Tuple[str, ...]:
+    matches = {placeholder_literal_sql, " ".join(placeholder_literal_sql.split())}
+    t = (type_name or "").strip().lower()
+
+    date_match = re.search(r"'(\d{4}-\d{2}-\d{2})'", placeholder_literal_sql)
+    time_match = re.search(r"'(\d{2}:\d{2}:\d{2})'", placeholder_literal_sql)
+    ts_match = re.search(r"'(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})'", placeholder_literal_sql)
+
+    if ts_match and "timestamp" in t:
+        matches.add(f"TIMESTAMP '{ts_match.group(1)}'")
+        matches.add(f"CAST('{ts_match.group(1)}' AS TIMESTAMP)")
+    elif date_match and ("date" in t and "update" not in t):
+        matches.add(f"DATE '{date_match.group(1)}'")
+        matches.add(f"CAST('{date_match.group(1)}' AS DATE)")
+    elif time_match and "time" in t and "timestamp" not in t:
+        matches.add(f"TIME '{time_match.group(1)}'")
+        matches.add(f"CAST('{time_match.group(1)}' AS TIME)")
+
+    return tuple(sorted(matches))
 
 
 class SyntaxTreeNode:
@@ -42,8 +166,9 @@ class SubqueryFixer:
     子查询修复器，用于修复子查询使其能够独立执行
     """
     
-    def __init__(self):
+    def __init__(self, db_id: str = DEFAULT_DB_ID):
         self.parser = SQLParser()
+        self.db_id = str(db_id or DEFAULT_DB_ID).strip()
     
     def extract_outer_context_tables(self, main_sql: str) -> Dict[str, str]:
         """
@@ -57,75 +182,191 @@ class SubqueryFixer:
         """
         找到子查询中引用的外部表别名
         """
-        # 使用 SQLParser 获取子查询内部的表别名
-        subquery_tables = set(self.parser.extract_table_aliases(subquery_sql).keys())
-        
-        # 使用 SQLParser 获取子查询中的所有列引用
-        column_refs = self.parser.extract_column_references(subquery_sql)
-        
-        external_table_refs = set()
-        
-        for table_alias, column_name in column_refs:
-            if table_alias:  # 有表别名的列引用
-                # 如果引用的表不在子查询内部定义，且在外层上下文中存在
-                if table_alias not in subquery_tables and table_alias in context_tables:
-                    external_table_refs.add(table_alias)
-        
-        return external_table_refs
+        prep = self.prepare_subquery_for_standalone(subquery_sql, context_tables)
+        return set(prep.external_aliases)
+
+    def _aliases_for_table(self, table_name: str, context_tables: Dict[str, str]) -> List[str]:
+        return [alias for alias, tname in context_tables.items() if tname.lower() == table_name.lower()]
+
+    def _extract_local_table_aliases(self, parsed: exp.Expression) -> Dict[str, str]:
+        aliases: Dict[str, str] = {}
+        for table in parsed.find_all(exp.Table):
+            aliases[table.alias_or_name] = table.name
+        return aliases
+
+    def _resolve_outer_reference(
+        self,
+        column: exp.Column,
+        local_tables: Dict[str, str],
+        context_tables: Dict[str, str],
+        schema_types: Dict[str, Dict[str, str]],
+    ) -> Optional[Tuple[str, str]]:
+        table_alias = (column.table or "").strip()
+        column_name = (column.name or "").strip()
+        if not column_name:
+            return None
+
+        if table_alias:
+            if table_alias not in local_tables and table_alias in context_tables:
+                return table_alias, context_tables[table_alias]
+            return None
+
+        if "_" not in column_name:
+            return None
+
+        # If any local table can legally provide this unqualified column, treat it as local.
+        lowered_col = column_name.lower()
+        for table_name in local_tables.values():
+            if lowered_col in schema_types.get(str(table_name).lower(), {}):
+                return None
+
+        prefix = column_name.split("_", 1)[0].lower()
+        table_name = TPCH_PREFIX_TO_TABLE.get(prefix)
+        if not table_name:
+            return None
+
+        for alias in self._aliases_for_table(table_name, context_tables):
+            if alias not in local_tables:
+                return alias, context_tables[alias]
+        return None
+
+    def _collect_correlated_replacements(
+        self, parsed: exp.Expression, context_tables: Dict[str, str]
+    ) -> List[CorrelatedColumnReplacement]:
+        local_tables = self._extract_local_table_aliases(parsed)
+        schema_types = _load_schema_column_types(self.db_id)
+        seen: Set[Tuple[str, str]] = set()
+        replacements: List[CorrelatedColumnReplacement] = []
+
+        for column in parsed.find_all(exp.Column):
+            resolved = self._resolve_outer_reference(column, local_tables, context_tables, schema_types)
+            if resolved is None:
+                continue
+            outer_alias, table_name = resolved
+            dedupe_key = (column.sql(), outer_alias)
+            if dedupe_key in seen:
+                continue
+            seen.add(dedupe_key)
+            idx = len(replacements)
+            placeholder_column = f"__dg_corr_{idx}__"
+            token = f"__DG_CORR_VALUE_{idx}__"
+            col_type = schema_types.get(str(table_name).lower(), {}).get(column.name.lower(), "")
+            placeholder_literal_sql = _placeholder_literal_for_type(col_type, token)
+            replacements.append(
+                CorrelatedColumnReplacement(
+                    original_sql=column.sql(),
+                    outer_alias=outer_alias,
+                    table_name=table_name,
+                    column_name=column.name,
+                    column_type=col_type,
+                    placeholder_column=placeholder_column,
+                    placeholder_literal_sql=placeholder_literal_sql,
+                    placeholder_match_sqls=_placeholder_match_sqls(placeholder_literal_sql, col_type),
+                )
+            )
+        return replacements
+
+    def prepare_subquery_for_standalone(
+        self, subquery_sql: str, context_tables: Dict[str, str]
+    ) -> StandaloneSubqueryPreparation:
+        """
+        将相关子查询改写成可独立送入 Calcite 的形式，但不引入真实外层表。
+
+        方案：
+        1. 识别子查询里引用的外层列；
+        2. 直接用与列类型匹配的特殊常值替换这些外层列；
+        3. 后续在拼回完整 SQL 前，再把这些特殊常值严格还原成原始外层列表达式。
+        """
+        try:
+            parsed = parse_one(subquery_sql)
+        except Exception:
+            return StandaloneSubqueryPreparation(
+                original_sql=subquery_sql,
+                prepared_sql=subquery_sql,
+            )
+
+        if not isinstance(parsed, exp.Select):
+            return StandaloneSubqueryPreparation(
+                original_sql=subquery_sql,
+                prepared_sql=subquery_sql,
+            )
+
+        replacements = self._collect_correlated_replacements(parsed, context_tables)
+        if not replacements:
+            return StandaloneSubqueryPreparation(
+                original_sql=subquery_sql,
+                prepared_sql=subquery_sql,
+            )
+
+        replacement_by_sql = {rep.original_sql: rep for rep in replacements}
+
+        def visit(node: exp.Expression) -> exp.Expression:
+            if isinstance(node, exp.Column):
+                rep = replacement_by_sql.get(node.sql())
+                if rep is not None:
+                    return parse_one(rep.placeholder_literal_sql)
+            return node
+
+        prepared_expr = parsed.transform(visit)
+
+        external_aliases = sorted({rep.outer_alias for rep in replacements})
+        return StandaloneSubqueryPreparation(
+            original_sql=subquery_sql,
+            prepared_sql=prepared_expr.sql(),
+            placeholder_context_alias="",
+            replacements=tuple(replacements),
+            external_aliases=tuple(external_aliases),
+        )
+
+    def _restore_subquery_from_standalone_fallback(
+        self, rewritten_sql: str, prep: StandaloneSubqueryPreparation
+    ) -> str:
+        out = rewritten_sql
+        for rep in prep.replacements:
+            for match_sql in sorted(rep.placeholder_match_sqls, key=len, reverse=True):
+                out = out.replace(match_sql, rep.original_sql)
+        return " ".join(out.split())
+
+    def restore_subquery_from_standalone(
+        self, rewritten_sql: str, prep: StandaloneSubqueryPreparation
+    ) -> str:
+        """
+        将独立重写阶段注入的占位上下文恢复成原始相关列语义。
+        """
+        if not prep.replacements:
+            return rewritten_sql
+
+        try:
+            parsed = parse_one(rewritten_sql)
+        except Exception:
+            return self._restore_subquery_from_standalone_fallback(rewritten_sql, prep)
+
+        match_to_rep: Dict[str, CorrelatedColumnReplacement] = {}
+        for rep in prep.replacements:
+            for match_sql in rep.placeholder_match_sqls:
+                match_to_rep[" ".join(match_sql.split()).lower()] = rep
+
+        def visit(node: exp.Expression) -> exp.Expression:
+            node_sql = " ".join(node.sql().split()).lower()
+            rep = match_to_rep.get(node_sql)
+            if rep is None:
+                return node
+            return parse_one(rep.original_sql)
+
+        restored_expr = parsed.transform(visit)
+
+        restored_sql = restored_expr.sql()
+        if any(rep.placeholder_literal_sql in restored_sql for rep in prep.replacements):
+            restored_sql = self._restore_subquery_from_standalone_fallback(restored_sql, prep)
+        return restored_sql
     
     def fix_subquery_syntax(self, subquery_sql: str, context_tables: Dict[str, str]) -> str:
         """
-        修复子查询语法，添加缺失的外部表引用
+        修复子查询语法，使其可独立送入重写器，但不再引入真实外层表。
         """
-        external_refs = self.find_external_column_references(subquery_sql, context_tables)
-        
-        if not external_refs:
-            return subquery_sql
-        
         try:
-            parsed = parse_one(subquery_sql)
-            
-            # 确保是 SELECT 语句
-            if not isinstance(parsed, exp.Select):
-                return subquery_sql
-            
-            # 获取现有的 FROM 子句
-            from_clause = parsed.find(exp.From)
-            
-            if from_clause:
-                # 在现有 FROM 子句基础上添加外部表
-                for table_alias in external_refs:
-                    table_name = context_tables[table_alias]
-                    
-                    # 创建新的表引用
-                    new_table = exp.Table(this=table_name)
-                    if table_alias != table_name:
-                        new_table = exp.Alias(this=new_table, alias=table_alias)
-                    
-                    # 使用 CROSS JOIN 添加表
-                    parsed = parsed.join(new_table, join_type="CROSS", copy=False)
-            else:
-                # 如果没有 FROM 子句，创建一个
-                if external_refs:
-                    # 取第一个外部表作为主表
-                    first_ref = list(external_refs)[0]
-                    table_name = context_tables[first_ref]
-                    
-                    new_table = exp.Table(this=table_name)
-                    if first_ref != table_name:
-                        new_table = exp.Alias(this=new_table, alias=first_ref)
-                    parsed = parsed.from_(new_table, copy=False)
-                    
-                    # 添加其余的表
-                    for table_alias in list(external_refs)[1:]:
-                        table_name = context_tables[table_alias]
-                        add_table = exp.Table(this=table_name)
-                        if table_alias != table_name:
-                            add_table = exp.Alias(this=add_table, alias=table_alias)
-                        parsed = parsed.join(add_table, join_type="CROSS", copy=False)
-            
-            return parsed.sql()
-            
+            prep = self.prepare_subquery_for_standalone(subquery_sql, context_tables)
+            return prep.prepared_sql
         except Exception as e:
             print(f"修复子查询时出错: {e}")
             return subquery_sql
@@ -149,8 +390,12 @@ class SubqueryFixer:
             
             # 修复子查询
             fixed_sql = self.fix_subquery_syntax(original_sql, context_tables)
-            
-            fixed_subqueries.append((original_sql, fixed_sql))
+            # 尝试对修复后的子查询应用 GROUP BY 别名 -> 原始表达式的替换
+            try:
+                aligned_sql = align_group_by_with_select(fixed_sql)
+            except Exception:
+                aligned_sql = fixed_sql
+            fixed_subqueries.append((original_sql, aligned_sql))
         
         return fixed_subqueries
     

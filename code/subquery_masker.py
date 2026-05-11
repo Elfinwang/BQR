@@ -449,7 +449,7 @@ def get_string_column_from_from_clause(expr: exp.Expression, db_config=DB_CONFIG
     database = db_config.get("database", "")
     if database == "dsb":
         dbname = "DSB"
-    elif database == "tpch" or database == "tpch10g" or database == "tpch5g" or database == "tpch1g":
+    elif database == "tpch" or database == "tpch10g" or database == "tpch5g" or database == "tpch1g" or database == "tpch01g":
         dbname = "TPCH"
 
     DB_STRING_COLUMNS = globals().get(f"{dbname}_STRING_COLUMNS", {})
@@ -500,7 +500,7 @@ def mask_all_but_one_subquery(sql: str, db_config=DB_CONFIG):
     subqueries = OrderedDict()
 
     def collect_subqueries(expr, db_config=DB_CONFIG, parent=None):
-        # 新增：判断子查询是否直接作为JOIN/LEFT JOIN/FROM的子表
+        # 判断子查询是否直接作为JOIN/LEFT JOIN/FROM的子表
         if isinstance(parent, (exp.Join, exp.From)):
             return
            
@@ -588,7 +588,7 @@ def mask_all_but_one_subquery(sql: str, db_config=DB_CONFIG):
 
 def get_alias_to_full(db_config):
     """
-    根据 db_config['db_id'] 返回当前数据库的别名到全表名的映射。
+    Return a mapping from table alias to full table name for the current database, based on db_config['database'].
     """
     db_id = db_config.get("database", "").upper()
     if(db_id == "TPCH10G") or (db_id == "TPCH1G") or (db_id == "TPCH5G"):
@@ -605,9 +605,9 @@ def get_alias_to_full(db_config):
 
 def restore_placeholders(masked_sql: str, subquery_map: list, db_config) -> str:
     """
-    将mask后的SQL中的mask表达式整体还原为原始子查询条件。
-    1. 将mask cond中的别名替换为全名（如 l. → lineitem.）；
-    2. 替换完后，避免 lineitem.l.col 变成 lineitem.lineitem.col，保留为 lineitem.col。
+    Restore the masked SQL by replacing mask expressions with the original subquery conditions.
+    1. Replace aliases in mask conditions with full table names (e.g., l. → lineitem.).
+    2. After replacement, avoid double prefixes like lineitem.lineitem.col; keep as lineitem.col.
     """
     restored_sql = masked_sql
 
