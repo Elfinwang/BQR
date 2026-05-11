@@ -1,6 +1,6 @@
 from sqlglot import parse_one, parse, exp
 from sqlglot.errors import ParseError
-from typing import Dict, List, Set, Tuple
+from typing import Dict, List, Set, Tuple, Optional
 import re
 import os
 import sys
@@ -8,13 +8,15 @@ import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from config import DB_CONFIG
-from utils.cost_estimator import get_query_cost
+import config
+from utils.cost_estimator import get_cost
 
 class SQLParser:
 
-    def __init__(self, db_config: dict = None):
+    def __init__(self, db_config: dict = None, cte_map: Optional[Dict[str, str]] = None):
 
         self.db_config = db_config if db_config else DB_CONFIG
+        self.cte_map = cte_map
     
     @staticmethod
     def extract_table_aliases(sql: str) -> Dict[str, str]:
@@ -60,7 +62,7 @@ class SQLParser:
                 return False
         
         try:
-            cost = get_query_cost(self.db_config, sql)
+            cost = get_cost(sql, db_config=self.db_config, cte_map=self.cte_map, strategy=config.COST_STRATEGY)
             print("cost:", cost)
             return cost != float("inf")
         except Exception:
