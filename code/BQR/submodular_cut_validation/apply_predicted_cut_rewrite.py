@@ -24,7 +24,6 @@ import math
 import os
 import re
 import sys
-import time
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence, Set, Tuple
 
@@ -398,7 +397,6 @@ def _jsonl_line_to_output(
     else:
         raise ValueError(f"{input_path}:{line_no}: {cuts_field} must be a list or null")
 
-    row_start = time.perf_counter()
     db_id = _db_id_from_jsonl_obj(obj, base_db)
     try:
         payload, _ = _rewrite_one(
@@ -425,7 +423,6 @@ def _jsonl_line_to_output(
         "rewritten_query_cost": payload.get("rewritten_query_cost"),
         "variant_fatal_error": payload.get("variant_fatal_error", ""),
         "line_index": obj.get("line_index", line_no),
-        "inference_time_sec": round(time.perf_counter() - row_start, 6),
     }
 
 
@@ -598,7 +595,6 @@ def run_sql_file(
                 traced_cut_edge_ids=cut_list,
             ):
                 tw.writerow(r)
-    row_start = time.perf_counter()
     payload, _ = _rewrite_one(
         sql_text,
         cut_list,
@@ -613,7 +609,6 @@ def run_sql_file(
         "rewritten_query_cost": payload.get("rewritten_query_cost"),
         "variant_fatal_error": payload.get("variant_fatal_error", ""),
         "sql_path": str(sql_path.resolve()),
-        "inference_time_sec": round(time.perf_counter() - row_start, 6),
     }
     output_path.write_text(json.dumps(out, ensure_ascii=False) + "\n", encoding="utf-8")
 

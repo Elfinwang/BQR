@@ -951,7 +951,6 @@ def _run_jsonl_mode(args: argparse.Namespace) -> None:
     succeeded = 0
     with input_path.open("r", encoding="utf-8") as fin, output_path.open("w", encoding="utf-8") as fout:
         for line_no, line in enumerate(fin, 1):
-            row_start = time.perf_counter()
             text = line.strip()
             if not text:
                 continue
@@ -966,7 +965,6 @@ def _run_jsonl_mode(args: argparse.Namespace) -> None:
                     "rewritten_sql": "",
                     "variant_fatal_error": f"missing_sql_field:{sql_field}",
                     "line_index": line_no,
-                    "inference_time_sec": round(time.perf_counter() - row_start, 6),
                 }
                 fout.write(json.dumps(out_row, ensure_ascii=False) + "\n")
                 continue
@@ -982,7 +980,6 @@ def _run_jsonl_mode(args: argparse.Namespace) -> None:
                     "original_query_cost": result.get("base_cost"),
                     "rewritten_query_cost": best.get("full_query_cost_rewritten"),
                     "line_index": obj.get("line_index", line_no),
-                    "inference_time_sec": round(time.perf_counter() - row_start, 6),
                 }
                 succeeded += 1
             except Exception as exc:
@@ -994,7 +991,6 @@ def _run_jsonl_mode(args: argparse.Namespace) -> None:
                     "original_query_cost": None,
                     "rewritten_query_cost": None,
                     "line_index": obj.get("line_index", line_no),
-                    "inference_time_sec": round(time.perf_counter() - row_start, 6),
                 }
 
             if "metadata" in obj:

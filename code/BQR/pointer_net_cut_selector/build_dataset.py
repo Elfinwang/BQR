@@ -1,222 +1,79 @@
 #!/usr/bin/env python3
+"""Build Pointer Network train/validation JSONL using BQR(HEU) cut-edge labels.
+
+Read labels from the input CSV or match a BQR(HEU) result JSONL by original SQL.
+Missing labels are errors; an explicit empty list is a valid no-cut target.
 """
-Build pointer-network train/test JSONL from TPCH CSV (column: original_sql).
-
-Each line is compatible with dataset.build_example_from_record:
-  {"sql": "...", "target_cut_edge_ids": [...], "metadata": {...}}
-
-Labels are heuristic weak supervision (for pipeline testing). For oracle labels,
-run double-greedy separately and merge target_cut_edge_ids.
-"""
-
 from __future__ import annotations
 
 import argparse
 import json
 import random
-import re
 import sys
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Sequence, Tuple
+from typing import Any, Dict, List, Optional, Sequence
+
+import pandas as pd
 
 SCRIPT_PATH = Path(__file__).resolve()
 REPO_ROOT = SCRIPT_PATH.parents[2]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-import pandas as pd
-
-from BQR.pointer_net_cut_selector.graph_adapter import build_graph_example
+LABEL_FIELDS = ("target_cut_edge_ids", "applied_cut_edge_ids", "cut_edge_ids")
 
 
-def _skip_ws(text: str, i: int) -> int:
-    while i < len(text) and text[i].isspace():
-        i += 1
-    return i
-
-
-def _match_keyword(text: str, i: int, keyword: str) -> Optional[int]:
-    j = _skip_ws(text, i)
-    end = j + len(keyword)
-    if text[j:end].lower() != keyword.lower():
-        return None
-    if end < len(text) and (text[end].isalnum() or text[end] == "_"):
-        return None
-    return end
-
-
-def _read_identifier(text: str, i: int) -> Tuple[Optional[str], int]:
-    i = _skip_ws(text, i)
-    if i >= len(text):
-        return None, i
-
-    if text[i] == '"':
-        j = i + 1
-        while j < len(text):
-            if text[j] == '"':
-                if j + 1 < len(text) and text[j + 1] == '"':
-                    j += 2
-                    continue
-                return text[i : j + 1], j + 1
-            j += 1
-        return None, i
-
-    if not (text[i].isalpha() or text[i] == "_"):
-        return None, i
-
-    j = i + 1
-    while j < len(text) and (text[j].isalnum() or text[j] == "_"):
-        j += 1
-    return text[i:j], j
-
-
-def _read_parenthesized(text: str, i: int) -> Tuple[Optional[str], int]:
-    i = _skip_ws(text, i)
-    if i >= len(text) or text[i] != "(":
-        return None, i
-
-    depth = 0
-    j = i
-    in_single = False
-    in_double = False
-    while j < len(text):
-        ch = text[j]
-        nxt = text[j + 1] if j + 1 < len(text) else ""
-
-        if not in_double and ch == "'" and not in_single:
-            in_single = True
-        elif in_single and ch == "'" and nxt == "'":
-            j += 2
+def extract_labels(record: Dict[str, Any], location: str) -> List[str]:
+    """Require explicit JSON arrays and reject conflicting label fields."""
+    candidates: List[List[str]] = []
+    for field in LABEL_FIELDS:
+        if field not in record:
             continue
-        elif in_single and ch == "'":
-            in_single = False
-        elif not in_single and ch == '"' and not in_double:
-            in_double = True
-        elif in_double and ch == '"':
-            in_double = False
-        elif not in_single and not in_double:
-            if ch == "(":
-                depth += 1
-            elif ch == ")":
-                depth -= 1
-                if depth == 0:
-                    return text[i + 1 : j], j + 1
-        j += 1
-    return None, i
+        value = record[field]
+        if isinstance(value, str):
+            try:
+                value = json.loads(value)
+            except json.JSONDecodeError as exc:
+                raise ValueError(f"{location}: {field} must be a JSON array, e.g. [\"E0\"] or [].") from exc
+        if not isinstance(value, list) or any(not isinstance(edge, str) or not edge.strip() for edge in value):
+            raise ValueError(f"{location}: {field} must be an array of non-empty edge ID strings.")
+        if len(set(value)) != len(value):
+            raise ValueError(f"{location}: {field} contains duplicate edge IDs.")
+        candidates.append(value)
+    if not candidates:
+        raise ValueError(f"{location}: missing BQR(HEU) cut-edge labels; provide --labels-jsonl or a CSV label column.")
+    if any(set(value) != set(candidates[0]) for value in candidates[1:]):
+        raise ValueError(f"{location}: conflicting cut-edge label fields.")
+    return candidates[0]
 
 
-def parse_top_level_ctes(sql: str) -> Tuple[Dict[str, str], str]:
-    ctes: Dict[str, str] = {}
-    i = _skip_ws(sql, 0)
-    end = _match_keyword(sql, i, "with")
-    if end is None:
-        return ctes, sql.strip()
-    i = end
-    end_recursive = _match_keyword(sql, i, "recursive")
-    if end_recursive is not None:
-        i = end_recursive
-
-    while True:
-        cte_name, i2 = _read_identifier(sql, i)
-        if cte_name is None:
-            return {}, sql.strip()
-        i = i2
-
-        i = _skip_ws(sql, i)
-        if i < len(sql) and sql[i] == "(":
-            _, i = _read_parenthesized(sql, i)
-            if _ is None:
-                return {}, sql.strip()
-
-        as_end = _match_keyword(sql, i, "as")
-        if as_end is None:
-            return {}, sql.strip()
-        i = as_end
-
-        body, i = _read_parenthesized(sql, i)
-        if body is None:
-            return {}, sql.strip()
-
-        ctes[cte_name.strip('"').lower()] = body.strip()
-
-        i = _skip_ws(sql, i)
-        if i < len(sql) and sql[i] == ",":
-            i += 1
-            continue
-        break
-
-    return ctes, sql[i:].strip()
+def check_search_status(record: Dict[str, Any], location: str) -> None:
+    error = record.get("variant_fatal_error")
+    if error:
+        raise ValueError(f"{location}: failed BQR(HEU) result cannot be used as a label: {error}")
 
 
-FROM_JOIN_PATTERN = re.compile(
-    r"(?P<prefix>\b(?:from|join)\s+)"
-    r"(?P<name>[A-Za-z_][A-Za-z0-9_]*|\"(?:[^\"]|\"\")+\")"
-    r"(?P<suffix>\s*(?:as\s+)?[A-Za-z_][A-Za-z0-9_]*)?",
-    flags=re.IGNORECASE,
-)
-
-
-def inline_ctes_in_query(sql: str) -> str:
-    """
-    If the query has a top-level WITH clause, inline each CTE as a parenthesized subquery in FROM/JOIN.
-    Same behavior as the standalone SQLStorm inliner (regex + hand-rolled WITH parse).
-    """
-    ctes, body = parse_top_level_ctes(sql)
-    if not ctes:
-        return " ".join(sql.strip().split())
-
-    cache: Dict[str, str] = {}
-    visiting = set()
-
-    def inline_cte(cte_name: str) -> str:
-        key = cte_name.lower()
-        if key in cache:
-            return cache[key]
-        if key in visiting:
-            return ctes[key]
-        visiting.add(key)
-        resolved = inline_refs(ctes[key])
-        visiting.remove(key)
-        cache[key] = resolved
-        return resolved
-
-    def replace_ref(match: re.Match) -> str:
-        prefix = match.group("prefix")
-        raw_name = match.group("name")
-        suffix = match.group("suffix") or ""
-
-        table_name = raw_name.strip('"').lower()
-        if table_name not in ctes:
-            return match.group(0)
-
-        inlined = inline_cte(table_name)
-        alias = suffix.strip()
-        if not alias:
-            alias = f"as {raw_name}"
-        return f"{prefix}({inlined}) {alias}"
-
-    def inline_refs(text: str) -> str:
-        return FROM_JOIN_PATTERN.sub(replace_ref, text)
-
-    return " ".join(inline_refs(body).strip().split())
-
-
-def heuristic_targets(edge_ids: Sequence[str], variant: int) -> List[str]:
-    if not edge_ids:
-        return []
-    n = len(edge_ids)
-    v = variant % 6
-    if v == 0:
-        return []
-    if v == 1:
-        return [edge_ids[0]]
-    if v == 2:
-        return list(edge_ids[: min(2, n)])
-    if v == 3:
-        return list(edge_ids[: min(3, n)])
-    if v == 4:
-        return [edge_ids[-1]]
-    return [edge_ids[n // 2]]
+def load_label_index(path: Path) -> Dict[str, List[str]]:
+    labels: Dict[str, List[str]] = {}
+    with path.open(encoding="utf-8-sig") as handle:
+        for line_no, line in enumerate(handle, 1):
+            if not line.strip():
+                continue
+            location = f"{path}:{line_no}"
+            record = json.loads(line)
+            if not isinstance(record, dict):
+                raise ValueError(f"{location}: expected a JSON object.")
+            check_search_status(record, location)
+            sql = str(record.get("original_sql") or record.get("sql") or "").strip()
+            if not sql:
+                raise ValueError(f"{location}: missing original_sql/sql.")
+            targets = extract_labels(record, location)
+            if sql in labels and set(labels[sql]) != set(targets):
+                raise ValueError(f"{location}: conflicting labels for the same SQL; select one BQR(HEU) result per query.")
+            labels[sql] = targets
+    if not labels:
+        raise ValueError(f"{path}: no labeled queries found.")
+    return labels
 
 
 def load_csv_rows(csv_path: Path) -> pd.DataFrame:
@@ -227,119 +84,113 @@ def load_csv_rows(csv_path: Path) -> pd.DataFrame:
     return df
 
 
-def parse_args() -> argparse.Namespace:
-    p = argparse.ArgumentParser(description="Build TPCH CSV -> pointer-net train/test JSONL.")
-    p.add_argument(
-        "--csv",
-        type=str,
-        default=str(REPO_ROOT / "data" / "queries" / "TPCH" / "queries_tpch_test.csv"),
-        help="Path to queries_tpch_test.csv (must have original_sql).",
-    )
-    p.add_argument(
-        "--output-train",
-        type=str,
-        default=str(REPO_ROOT / "data" / "pointer_net" / "tpch_csv_train.jsonl"),
-    )
-    p.add_argument(
-        "--output-test",
-        type=str,
-        default=str(REPO_ROOT / "data" / "pointer_net" / "tpch_csv_test.jsonl"),
-    )
-    p.add_argument("--train-ratio", type=float, default=0.9, help="Fraction of usable rows for training.")
-    p.add_argument("--seed", type=int, default=42)
-    p.add_argument("--max-rows", type=int, default=None, help="Optional cap for debugging.")
-    return p.parse_args()
+def parse_args(argv: Optional[Sequence[str]] = None) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--csv", type=str, required=True, help="CSV containing original_sql and optional BQR(HEU) label columns.")
+    parser.add_argument("--labels-jsonl", type=str, help="BQR(HEU) batch results matched by exact original SQL (outer whitespace ignored).")
+    parser.add_argument("--output-train", type=str, default=str(REPO_ROOT / "data/pointer_net/tpch_csv_train.jsonl"))
+    parser.add_argument("--output-test", type=str, default=str(REPO_ROOT / "data/pointer_net/tpch_csv_test.jsonl"), help="Held-out validation JSONL.")
+    parser.add_argument("--train-ratio", type=float, default=0.9, help="Fraction of distinct SQL queries assigned to training.")
+    parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--max-rows", type=int, default=None, help="Optional input row limit for debugging.")
+    args = parser.parse_args(argv)
+    if not 0 < args.train_ratio < 1:
+        parser.error("--train-ratio must be strictly between 0 and 1")
+    if args.max_rows is not None and args.max_rows < 1:
+        parser.error("--max-rows must be positive")
+    return args
 
 
-def _source_id(ser: pd.Series, idx: int) -> str:
-    """First non-(db_id, original_sql) column is usually the query id column."""
-    for key in ser.index:
-        if key in ("original_sql", "db_id"):
-            continue
-        val = ser.get(key)
-        if val is not None and str(val).strip() != "":
-            return str(val).strip()
-    return str(idx + 1)
+def build_rows(df: pd.DataFrame, label_index: Optional[Dict[str, List[str]]], graph_builder: Any,
+               max_rows: Optional[int] = None) -> List[Dict[str, Any]]:
+    rows: List[Dict[str, Any]] = []
+    for idx, (_, series) in enumerate(df.iterrows()):
+        if max_rows is not None and idx >= max_rows:
+            break
+        location = f"CSV data row {idx + 1}"
+        sql = str(series.get("original_sql", "")).strip()
+        if not sql:
+            raise ValueError(f"{location}: original_sql is empty.")
+        record = series.to_dict()
+        check_search_status(record, location)
+        if label_index is None:
+            targets = extract_labels(record, location)
+        else:
+            if sql not in label_index:
+                raise ValueError(f"{location}: no matching BQR(HEU) label; use the same SQL text as the search input.")
+            targets = label_index[sql]
+            if any(field in record for field in LABEL_FIELDS):
+                csv_targets = extract_labels(record, location)
+                if set(csv_targets) != set(targets):
+                    raise ValueError(f"{location}: CSV labels disagree with --labels-jsonl.")
+        try:
+            graph = graph_builder(sql)
+        except Exception as exc:
+            raise ValueError(f"{location}: could not construct SQL graph: {exc}") from exc
+        eligible = graph.eligible_edge_ids
+        unknown = set(targets) - set(eligible)
+        if unknown:
+            raise ValueError(f"{location}: labels contain ineligible edges {sorted(unknown)}; candidates: {eligible}")
+        # Search labels describe a set; use graph order for a stable training sequence.
+        target_set = set(targets)
+        rows.append({
+            "sql": sql,
+            "target_cut_edge_ids": [edge for edge in eligible if edge in target_set],
+            "metadata": {
+                "csv_row_index": idx,
+                "db_id": str(series.get("db_id", "") or "tpch"),
+                "eligible_edge_ids": eligible,
+                "label_source": "bqr_heu",
+            },
+        })
+    return rows
+
+
+def split_rows(rows: List[Dict[str, Any]], train_ratio: float, seed: int) -> tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+    groups: Dict[str, List[Dict[str, Any]]] = {}
+    for row in rows:
+        group = groups.setdefault(row["sql"], [])
+        if group and group[0]["target_cut_edge_ids"] != row["target_cut_edge_ids"]:
+            raise ValueError("Conflicting labels for duplicate SQL rows.")
+        group.append(row)
+    if len(groups) < 2:
+        raise ValueError("Need at least two distinct labeled SQL queries for training and validation.")
+    queries = list(groups)
+    random.Random(seed).shuffle(queries)
+    n_train = max(1, min(len(queries) - 1, int(len(queries) * train_ratio)))
+    train = [row for sql in queries[:n_train] for row in groups[sql]]
+    valid = [row for sql in queries[n_train:] for row in groups[sql]]
+    return train, valid
 
 
 def main() -> None:
     args = parse_args()
     csv_path = Path(args.csv).expanduser().resolve()
-    random.seed(args.seed)
-
-    df = load_csv_rows(csv_path)
-    rows: List[Dict[str, Any]] = []
-    stats = {"total_csv_rows": len(df), "skipped_empty_sql": 0, "skipped_graph_error": 0, "skipped_no_edges": 0, "usable": 0}
-
-    for idx, (_, ser) in enumerate(df.iterrows()):
-        if args.max_rows is not None and idx >= args.max_rows:
-            break
-        sql = str(ser.get("original_sql", "") or "").strip()
-        if not sql:
-            stats["skipped_empty_sql"] += 1
-            continue
-        sql = inline_ctes_in_query(sql)
-        try:
-            graph = build_graph_example(sql)
-        except Exception:
-            stats["skipped_graph_error"] += 1
-            continue
-        variant = stats["usable"]
-        if not graph.eligible_edge_ids:
-            stats["skipped_no_edges"] += 1
-            targets = []
-            label_heuristic = "no_edges"
-        else:
-            targets = heuristic_targets(graph.eligible_edge_ids, variant)
-            label_heuristic = f"v{variant % 6}"
-        rows.append(
-            {
-                "sql": sql,
-                "target_cut_edge_ids": targets,
-                "metadata": {
-                    "csv_row_index": int(idx),
-                    "source_id": _source_id(ser, idx),
-                    "db_id": str(ser.get("db_id", "") or "tpch"),
-                    "eligible_edge_ids": graph.eligible_edge_ids,
-                    "label_heuristic": label_heuristic,
-                },
-            }
-        )
-        stats["usable"] += 1
-
-    if len(rows) < 2:
-        raise SystemExit(
-            f"Need at least 2 usable rows; got {len(rows)}. Stats: {json.dumps(stats)}"
-        )
-
-    random.shuffle(rows)
-    n_train = max(1, int(len(rows) * args.train_ratio))
-    if n_train >= len(rows):
-        n_train = len(rows) - 1
-    train_rows = rows[:n_train]
-    test_rows = rows[n_train:]
-
+    label_path = Path(args.labels_jsonl).expanduser().resolve() if args.labels_jsonl else None
     out_train = Path(args.output_train).expanduser().resolve()
     out_test = Path(args.output_test).expanduser().resolve()
-    out_train.parent.mkdir(parents=True, exist_ok=True)
-    out_test.parent.mkdir(parents=True, exist_ok=True)
+    inputs = {csv_path, label_path}
+    if out_train == out_test or out_train in inputs or out_test in inputs:
+        raise ValueError("Output paths must be distinct and must not overwrite input files.")
+    df = load_csv_rows(csv_path)
+    label_index = load_label_index(label_path) if label_path else None
+    if label_index is None and not any(field in df.columns for field in LABEL_FIELDS):
+        raise ValueError("Missing BQR(HEU) cut-edge labels: provide --labels-jsonl or a CSV label column.")
+    from BQR.pointer_net_cut_selector.graph_adapter import build_graph_example
 
-    for path, part in [(out_train, train_rows), (out_test, test_rows)]:
-        with path.open("w", encoding="utf-8") as f:
-            for rec in part:
-                f.write(json.dumps(rec, ensure_ascii=False) + "\n")
-
-    summary = {
-        "csv": str(csv_path),
-        "train": str(out_train),
-        "test": str(out_test),
-        "num_train": len(train_rows),
-        "num_test": len(test_rows),
-        "stats": stats,
-        "train_ratio": args.train_ratio,
-        "seed": args.seed,
-    }
-    print(json.dumps(summary, indent=2, ensure_ascii=False))
+    rows = build_rows(df, label_index, build_graph_example, args.max_rows)
+    train_rows, valid_rows = split_rows(rows, args.train_ratio, args.seed)
+    for path, records in ((out_train, train_rows), (out_test, valid_rows)):
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with path.open("w", encoding="utf-8") as handle:
+            for record in records:
+                handle.write(json.dumps(record, ensure_ascii=False) + "\n")
+    print(json.dumps({
+        "csv": str(csv_path), "labels_jsonl": str(label_path) if label_path else None,
+        "train": str(out_train), "validation": str(out_test),
+        "num_train": len(train_rows), "num_validation": len(valid_rows),
+        "label_source": "bqr_heu", "train_ratio": args.train_ratio, "seed": args.seed,
+    }, indent=2, ensure_ascii=False))
 
 
 if __name__ == "__main__":
